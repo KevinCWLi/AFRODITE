@@ -266,22 +266,8 @@ void EventAction::EndOfEventAction(const G4Event* event)
                 ////////////////////////////////////////////////////////////////////
                 //      PlasticScint DETECTORS - 1D, Counts versus Energy
                 ////////////////////////////////////////////////////////////////////
-                
-                //analysisManager->FillH1(i+7, GainPlasticScint*PlasticScint_EDep[i][k] + OffsetPlasticScint, 1);
-                
+                                
                 PlasticScint_TOF[i][k] = G4RandGauss::shoot(PlasticScint_TOF[i][k], 0.05*PlasticScint_TOF[i][k]);
-                
-                
-                ////////////////////////////////////////////////////////////////////
-                //      PlasticScint DETECTORS - 2D, Position versus Energy
-                ////////////////////////////////////////////////////////////////////
-                //analysisManager->FillH2(i+1, PlasticScint_positionX[i][k], PlasticScint_positionY[i][k], PlasticScint_EDep[i][k]);
-                
-                ////////////////////////////////////////////////////////////////////
-                //      PlasticScint DETECTORS - 2D, Energy versus T.O.F.
-                ////////////////////////////////////////////////////////////////////
-                
-                //analysisManager->FillH2(i+4, PlasticScint_TOF[i][k], GainPlasticScint*PlasticScint_EDep[i][k] + OffsetPlasticScint, 1);
                 
             }
         }
