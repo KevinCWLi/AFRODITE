@@ -110,46 +110,76 @@ RunAction::RunAction()
     ////////////////////////////////////////////////////
     
     // Creating ntuple
-    analysisManager->CreateNtuple("DataTreeSim", "K600 Spectrometer - Coincident Events");
+    analysisManager->CreateNtuple("DataTreeSim", "AFRODITE");
     
-    ////    VDC Detectors
-    analysisManager->CreateNtupleDColumn(0, "VDC1_Xpos");
-    analysisManager->CreateNtupleDColumn(0, "VDC1_Y");
-    analysisManager->CreateNtupleDColumn(0, "VDC1_ThetaFP");
-    analysisManager->CreateNtupleDColumn(0, "VDC1_ThetaSCAT");
+    ////////////////////////////////////////////////////
+    ////    CLOVER Detectors
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_Energy[0]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_Energy[1]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_Energy[2]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_Energy[3]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_Energy[4]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_Energy[5]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_Energy[6]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_Energy[7]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_Energy[8]");
 
+    ////    Gamma Tracking
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosX[0]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosX[1]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosX[2]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosX[3]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosX[4]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosX[5]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosX[6]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosX[7]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosX[8]");
     
-    analysisManager->CreateNtupleDColumn(0, "VDC2_Xpos");
-    analysisManager->CreateNtupleDColumn(0, "VDC2_Y");
-    analysisManager->CreateNtupleDColumn(0, "VDC2_ThetaFP");
-    analysisManager->CreateNtupleDColumn(0, "VDC2_ThetaSCAT");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosY[0]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosY[1]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosY[2]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosY[3]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosY[4]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosY[5]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosY[6]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosY[7]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosY[8]");
     
-    ////    TIARA Detectors
-    analysisManager->CreateNtupleIColumn(0, "TIARANo[1]");
-    analysisManager->CreateNtupleIColumn(0, "TIARA_RowNo[1]");
-    analysisManager->CreateNtupleIColumn(0, "TIARA_SectorNo[1]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosZ[0]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosZ[1]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosZ[2]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosZ[3]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosZ[4]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosZ[5]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosZ[6]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosZ[7]");
+    analysisManager->CreateNtupleDColumn(0, "CLOVER_PosZ[8]");
     
-    analysisManager->CreateNtupleDColumn(0, "TIARA_E[1]");
-    analysisManager->CreateNtupleDColumn(0, "Theta[1]");
-    analysisManager->CreateNtupleDColumn(0, "Phi[1]");
+    
+    ////////////////////////////////////////////////////
+    /////   PlasticScint Detectors (Neutron Wall)
+    analysisManager->CreateNtupleDColumn(0, "PlasticScint_Energy[0]");
+    analysisManager->CreateNtupleDColumn(0, "PlasticScint_Energy[1]");
+    analysisManager->CreateNtupleDColumn(0, "PlasticScint_Energy[2]");
+    analysisManager->CreateNtupleDColumn(0, "PlasticScint_Energy[3]");
+    analysisManager->CreateNtupleDColumn(0, "PlasticScint_Energy[4]");
+    analysisManager->CreateNtupleDColumn(0, "PlasticScint_Energy[5]");
+    analysisManager->CreateNtupleDColumn(0, "PlasticScint_Energy[6]");
+    analysisManager->CreateNtupleDColumn(0, "PlasticScint_Energy[7]");
+    analysisManager->CreateNtupleDColumn(0, "PlasticScint_Energy[8]");
+    analysisManager->CreateNtupleDColumn(0, "PlasticScint_Energy[9]");
+    analysisManager->CreateNtupleDColumn(0, "PlasticScint_Energy[10]");
+    analysisManager->CreateNtupleDColumn(0, "PlasticScint_Energy[11]");
 
-    //analysisManager->CreateNtupleDColumn("TIARANo[2]");
-    //analysisManager->CreateNtupleDColumn("TIARA_RowNo[2]");
-    //analysisManager->CreateNtupleDColumn("TIARA_SectorNo[2]");
-    //analysisManager->CreateNtupleDColumn(0, "TIARA_t[1]");
+    ////////////////////////////////////////////////////
+    ////    LEPS Detectors
+    analysisManager->CreateNtupleDColumn(0, "LEPS_Energy[0]");
+    analysisManager->CreateNtupleDColumn(0, "LEPS_Energy[1]");
+    analysisManager->CreateNtupleDColumn(0, "LEPS_Energy[2]");
+    analysisManager->CreateNtupleDColumn(0, "LEPS_Energy[3]");
+    analysisManager->CreateNtupleDColumn(0, "LEPS_Energy[4]");
+    analysisManager->CreateNtupleDColumn(0, "LEPS_Energy[5]");
 
-    /*
-    ////    PADDLE Detectors
-    analysisManager->CreateNtupleDColumn(0, "pad1_E");
-    analysisManager->CreateNtupleDColumn(0, "pad1_tof");
-    analysisManager->CreateNtupleDColumn(0, "pad2_E");
-    analysisManager->CreateNtupleDColumn(0, "pad2_tof");
-    
-    ////    HAGAR Detector
-    analysisManager->CreateNtupleDColumn("HAGAR_E");
-    //analysisManager->CreateNtupleDColumn("HAGAR_t");
-    */
-    
     analysisManager->FinishNtuple(0);
     
     

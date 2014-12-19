@@ -250,10 +250,6 @@ void EventAction::EndOfEventAction(const G4Event* event)
     //
     ////////////////////////////////////////////////////////
     
-    GainPlasticScint = 1.0;
-    OffsetPlasticScint = 0.0;
-
-    
     for(G4int i=0; i<12; i++)
     {
         for (G4int k=0; k<PlasticScint_TotalTimeSamples; k++)
@@ -271,7 +267,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
                 //      PlasticScint DETECTORS - 1D, Counts versus Energy
                 ////////////////////////////////////////////////////////////////////
                 
-                analysisManager->FillH1(i+7, GainPlasticScint*PlasticScint_EDep[i][k] + OffsetPlasticScint, 1);
+                //analysisManager->FillH1(i+7, GainPlasticScint*PlasticScint_EDep[i][k] + OffsetPlasticScint, 1);
                 
                 PlasticScint_TOF[i][k] = G4RandGauss::shoot(PlasticScint_TOF[i][k], 0.05*PlasticScint_TOF[i][k]);
                 
@@ -279,13 +275,13 @@ void EventAction::EndOfEventAction(const G4Event* event)
                 ////////////////////////////////////////////////////////////////////
                 //      PlasticScint DETECTORS - 2D, Position versus Energy
                 ////////////////////////////////////////////////////////////////////
-                analysisManager->FillH2(i+1, PlasticScint_positionX[i][k], PlasticScint_positionY[i][k], PlasticScint_EDep[i][k]);
+                //analysisManager->FillH2(i+1, PlasticScint_positionX[i][k], PlasticScint_positionY[i][k], PlasticScint_EDep[i][k]);
                 
                 ////////////////////////////////////////////////////////////////////
                 //      PlasticScint DETECTORS - 2D, Energy versus T.O.F.
                 ////////////////////////////////////////////////////////////////////
                 
-                analysisManager->FillH2(i+4, PlasticScint_TOF[i][k], GainPlasticScint*PlasticScint_EDep[i][k] + OffsetPlasticScint, 1);
+                //analysisManager->FillH2(i+4, PlasticScint_TOF[i][k], GainPlasticScint*PlasticScint_EDep[i][k] + OffsetPlasticScint, 1);
                 
             }
         }
@@ -308,7 +304,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
             {
                 if(G4RandGauss::shoot(CLOVER_HPGeCrystal_EDep[i][j][k], 0.7) >= CLOVER_HPGeCrystal_ThresholdEnergy)
                 {
-                    CLOVER_HPGeCrystal_EDep[i][j][k] = G4RandGauss::shoot(CLOVER_HPGeCrystal_EDep[i][j][k], 1.7);
+                    CLOVER_HPGeCrystal_EDep[i][j][k] = abs(G4RandGauss::shoot(CLOVER_HPGeCrystal_EDep[i][j][k], 1.7));
                     
                     if(Activate_CLOVER_ComptonSupression)
                     {
@@ -325,32 +321,75 @@ void EventAction::EndOfEventAction(const G4Event* event)
                         }
                         if (CLOVER_HPGeCrystal_EDepVETO[i][j][k]) CLOVER_HPGeCrystal_EDep[i][j][k] = 0;
                     }
-                    
-                    if(Activate_CLOVER_ADDBACK && CLOVER_HPGeCrystal_EDep[i][j][k] != 0)
+
+                    //      ADDBACK
+                    if(Activate_CLOVER_ADDBACK)
                     {
-                        //      ADDBACK
                         CLOVER_EDep[i][k] += CLOVER_HPGeCrystal_EDep[i][j][k];
                         
                         //      For each Clover
-                        analysisManager->FillH1(i+10, GainCLOVER*CLOVER_EDep[i][k] + OffsetCLOVER);
+                        //analysisManager->FillH1(i+10, GainCLOVER*CLOVER_EDep[i][k] + OffsetCLOVER);
                         
                         //      For the Entire Clover Array
-                        analysisManager->FillH1(19, GainCLOVER*CLOVER_EDep[i][k] +  OffsetCLOVER);
+                        //analysisManager->FillH1(19, GainCLOVER*CLOVER_EDep[i][k] +  OffsetCLOVER);
                     }
                     
                     else if(CLOVER_HPGeCrystal_EDep[i][j][k] != 0)
                     {
                         //      For each Clover
-                        analysisManager->FillH1(i+10, GainCLOVER*CLOVER_HPGeCrystal_EDep[i][j][k] + OffsetCLOVER);
+                        //analysisManager->FillH1(i+10, GainCLOVER*CLOVER_HPGeCrystal_EDep[i][j][k] + OffsetCLOVER);
                         
                         //      For the Entire Clover Array
-                        analysisManager->FillH1(19, GainCLOVER*CLOVER_HPGeCrystal_EDep[i][j][k] +  OffsetCLOVER);
+                        //analysisManager->FillH1(19, GainCLOVER*CLOVER_HPGeCrystal_EDep[i][j][k] +  OffsetCLOVER);
                     }
                 }
+            }
+            
+            if(Activate_CLOVER_ADDBACK && CLOVER_EDep[i][k] >= CLOVER_HPGeCrystal_ThresholdEnergy)
+            {
+                //analysisManager->FillNtupleDColumn(0, i, GainCLOVER*CLOVER_EDep[i][k] + OffsetCLOVER);
             }
         }
     }
     
+    
+    ////////////////////////////////////////////////////
+    //
+    //              LEPS DETECTOR ARRAY
+    //
+    ////////////////////////////////////////////////////
+    
+    for(G4int i=0; i<6; i++)
+    {
+        for(G4int k=0; k<LEPS_TotalTimeSamples; k++)
+        {
+            for(G4int j=0; j<4; j++)
+            {
+                if(G4RandGauss::shoot(LEPS_HPGeCrystal_EDep[i][j][k], 0.7) >= LEPS_HPGeCrystal_ThresholdEnergy)
+                {
+                    LEPS_HPGeCrystal_EDep[i][j][k] = abs(G4RandGauss::shoot(LEPS_HPGeCrystal_EDep[i][j][k], 1.7));
+                    
+                    //      ADDBACK
+                    if(Activate_LEPS_ADDBACK)
+                    {
+                        LEPS_EDep[i][k] += LEPS_HPGeCrystal_EDep[i][j][k];
+                    }
+                    /*
+                    else if(CLOVER_HPGeCrystal_EDep[i][j][k] != 0)
+                    {
+
+                    }
+                    */
+                }
+            }
+            
+            if(Activate_LEPS_ADDBACK && LEPS_EDep[i][k] >= LEPS_HPGeCrystal_ThresholdEnergy)
+            {
+                //analysisManager->FillNtupleDColumn(0, i, GainLEPS*LEPS_EDep[i][k] + OffsetLEPS);
+            }
+        }
+    }
+
     
     
     ////////////////////////////////////////////////////
@@ -359,16 +398,6 @@ void EventAction::EndOfEventAction(const G4Event* event)
     ////                                            ////
     ////////////////////////////////////////////////////
     /*
-    analysisManager->FillNtupleDColumn(0, 0, Xpos[0]);
-    analysisManager->FillNtupleDColumn(0, 1, Y[0]);
-    analysisManager->FillNtupleDColumn(0, 2, ThetaFP[0]);
-    analysisManager->FillNtupleDColumn(0, 3, ThetaSCAT[0]);
-
-    analysisManager->FillNtupleDColumn(0, 4, Xpos[1]);
-    analysisManager->FillNtupleDColumn(0, 5, Y[1]);
-    analysisManager->FillNtupleDColumn(0, 6, ThetaFP[1]);
-    analysisManager->FillNtupleDColumn(0, 7, ThetaSCAT[1]);
-    
     analysisManager->AddNtupleRow(0);
     */
     
