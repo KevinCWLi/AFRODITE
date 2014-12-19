@@ -60,13 +60,13 @@ RunAction::RunAction()
   //analysisManager->SetHistoDirectoryName("histograms");
   //analysisManager->SetNtupleDirectoryName("ntuple");
   analysisManager->SetVerboseLevel(1);
-  analysisManager->SetFirstHistoId(1);
+  //analysisManager->SetFirstHistoId(1);
 
-  // Book histograms, ntuple
-  //
+    // Book histograms, ntuple
+    //
   
     // Creating 1D histograms
-    
+ /*
     ////    TIARA DETECTORS, Histograms 1-6
     analysisManager->CreateH1("CvsE_TIARA1","TIARA 1 - Counts versus Energy", 10000, 0., 10000.);
     analysisManager->CreateH1("CvsE_TIARA2","TIARA 2 - Counts versus Energy", 10000, 0., 10000.);
@@ -91,18 +91,7 @@ RunAction::RunAction()
     analysisManager->CreateH1("CvsE_CLOVER8","CLOVER 8 - Counts versus Energy", 3000, 0., 3000.);
     analysisManager->CreateH1("CvsE_CLOVER9","CLOVER 9 - Counts versus Energy", 3000, 0., 3000.);
     analysisManager->CreateH1("CvsE_CLOVER_EA","Entire CLOVER Array - Counts versus Energy", 3000, 0., 3000.);
-
-    
-    // Creating 2D histograms
-    
-    ////    PADDLE DETECTORS, Histograms 1-6
-    analysisManager->CreateH2("PvsE_PADDLE1","PADDLE 1 - Position vs. Energy", 1400, -700., 700., 3, -3*(102/2), 3*(102/2));
-    analysisManager->CreateH2("PvsE_PADDLE2","PADDLE 2 - Position vs. Energy", 1400, -700., 700., 3, -3*(102/2), 3*(102/2));
-    analysisManager->CreateH2("PvsE_PADDLE3","PADDLE 3 - Position vs. Energy", 1400, -700., 700., 3, -3*(102/2), 3*(102/2));
-    analysisManager->CreateH2("EvsTOF_PADDLE1","PADDLE 1 - Energy vs. Time of Flight", 300, 0., 500.*0.3, 40, 0., 40.);
-    analysisManager->CreateH2("EvsTOF_PADDLE2","PADDLE 2 - Energy vs. Time of Flight", 300, 0., 500.*0.3, 40, 0., 40.);
-    analysisManager->CreateH2("EvsTOF_PADDLE3","PADDLE 3 - Energy vs. Time of Flight", 300, 0., 500.*0.3, 40, 0., 40.);
-    
+*/
 
 
     ////////////////////////////////////////////////////
