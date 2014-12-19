@@ -1307,19 +1307,20 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
     //              LEPS HPGeCrystals - CADMesh
     //////////////////////////////////////////////////////////
     
-    G4Tubs* Solid_HPGeCrystal1 = new G4Tubs("Solid_HPGeCrystal1", 0.*mm, 33.0*mm, 5.5*mm, 0.*deg, 90.*deg);
-    G4Tubs* Solid_HPGeCrystal2 = new G4Tubs("Solid_HPGeCrystal2", 0.*mm, 33.0*mm, 5.5*mm, 90.*deg, 180.*deg);
-    G4Tubs* Solid_HPGeCrystal3 = new G4Tubs("Solid_HPGeCrystal3", 0.*mm, 33.0*mm, 5.5*mm, 180.*deg, 270.*deg);
-    G4Tubs* Solid_HPGeCrystal4 = new G4Tubs("Solid_HPGeCrystal4", 0.*mm, 33.0*mm, 5.5*mm, 270.*deg, 360.*deg);
+    G4Tubs* Solid_HPGeCrystal = new G4Tubs("Solid_HPGeCrystal1", 0.*mm, 33.0*mm, 5.5*mm, 0.*deg, 90.*deg);
     
-    G4LogicalVolume* Logic_LEPS_HPGeCrystal[4];
+    G4LogicalVolume* Logic_LEPS_HPGeCrystal;
+    Logic_LEPS_HPGeCrystal = new G4LogicalVolume(Solid_HPGeCrystal, G4_Ge_Material,"LogicLEPSHPGeCrystal",0,0,0);
+    
+    LEPS_HPGeCrystal_rotm[0].rotateZ(0.*deg);
+    LEPS_HPGeCrystal_rotm[1].rotateZ(90.*deg);
+    LEPS_HPGeCrystal_rotm[2].rotateZ(180.*deg);
+    LEPS_HPGeCrystal_rotm[3].rotateZ(270.*deg);
 
-    Logic_LEPS_HPGeCrystal[0] = new G4LogicalVolume(Solid_HPGeCrystal1, G4_Ge_Material,"LogicLEPSHPGeCrystal",0,0,0);
-    Logic_LEPS_HPGeCrystal[1] = new G4LogicalVolume(Solid_HPGeCrystal2, G4_Ge_Material,"LogicLEPSHPGeCrystal",0,0,0);
-    Logic_LEPS_HPGeCrystal[2] = new G4LogicalVolume(Solid_HPGeCrystal3, G4_Ge_Material,"LogicLEPSHPGeCrystal",0,0,0);
-    Logic_LEPS_HPGeCrystal[3] = new G4LogicalVolume(Solid_HPGeCrystal4, G4_Ge_Material,"LogicLEPSHPGeCrystal",0,0,0);
-    
-    
+    for(G4int i=0; i<4; i++)
+    {
+        LEPS_HPGeCrystal_transform[i] = G4Transform3D(LEPS_HPGeCrystal_rotm[i], G4ThreeVector(0,0,(29.0-0.5)*mm));
+    }
     
     ////////////////////////////////////////////////////
     //               LEPS INITIALIZATION
@@ -1363,9 +1364,8 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
             
             for (int j=0; j<4; j++)
             {
-                Physical_LEPS_HPGeCrystal = new G4PVPlacement(0,               // no rotation
-                                                              G4ThreeVector(0,0,(29.0-0.5)*mm), // at (x,y,z)
-                                                              Logic_LEPS_HPGeCrystal[j],       // its logical volume
+                Physical_LEPS_HPGeCrystal = new G4PVPlacement(LEPS_HPGeCrystal_transform[j],
+                                                              Logic_LEPS_HPGeCrystal,       // its logical volume
                                                               "LEPSHPGeCrystal",       // its name
                                                               Logic_LEPS_InternalVacuum[i],    // its mother  volume
                                                               false,           // no boolean operations

@@ -58,19 +58,19 @@ const G4bool        GA_GenAngDist = false;
 const G4int         GA_GenAngDist_buffer = 5000;
 
 
-//////////////////////////////////////////////////////////////////////////
-
 ///////////////     TIARA Detectors - PIXIE16 Sampling     ///////////////////
 const G4double      TIARA_SamplingTime = 20; // ns
 const G4int         TIARA_TotalTimeSamples = 5; //
 const G4double      TIARA_TotalSampledTime = TIARA_SamplingTime * TIARA_TotalTimeSamples; // ns
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+
 ///////////////     PlasticScint Detectors - Analogue Sampling    ///////////////////
 const G4double      PlasticScint_SamplingTime = 10; // ns
 const G4int         PlasticScint_TotalTimeSamples = 15; //
 const G4double      PlasticScint_TotalSampledTime = PlasticScint_SamplingTime * PlasticScint_TotalTimeSamples; // ns
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
 
 ///////////////     CLOVER Detectors - PIXIE16 Sampling     ///////////////////
 const G4bool        Activate_CLOVER_ADDBACK = false;
@@ -81,11 +81,20 @@ const G4int         CLOVER_TotalTimeSamples = 10; //
 const G4double      CLOVER_TotalSampledTime = CLOVER_SamplingTime * CLOVER_TotalTimeSamples; // ns
 const G4int         CLOVER_ComptonSupression_TimeWindow = 3; // Amount of CLOVER Time Samples
 
+
 ///////////////     CLOVER BGO Anti-Compton Shield - PIXIE16 Sampling    ///////////////////
 const G4double      CLOVER_Shield_BGO_SamplingTime = CLOVER_SamplingTime; // ns
 const G4int         CLOVER_Shield_BGO_TotalTimeSamples = CLOVER_TotalTimeSamples + CLOVER_ComptonSupression_TimeWindow; //
 const G4double      CLOVER_Shield_BGO_TotalSampledTime = CLOVER_Shield_BGO_SamplingTime * CLOVER_Shield_BGO_TotalTimeSamples; // ns
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+
+///////////////     LEPS Detectors - PIXIE16 Sampling     ///////////////////
+const G4bool        Activate_LEPS_ADDBACK = false;
+const G4double      LEPS_SamplingTime = 10; // ns
+const G4int         LEPS_TotalTimeSamples = 10; //
+const G4double      LEPS_TotalSampledTime = LEPS_SamplingTime * LEPS_TotalTimeSamples; // ns
+
 
 ///////////////     TIARA - Energy Threshold     ///////////////////
 const G4double      TIARA_AA_ThresholdEnergy = .5;   // MeV
@@ -123,7 +132,6 @@ class EventAction : public G4UserEventAction
     //      TIARA
     G4double GainTIARA = 1.0;
     G4double OffsetTIARA = 0.0;
-    G4double shift_phi;
     
     G4double    TIARA_AA[5][16][8][3][TIARA_TotalTimeSamples];
     //  First index designates the TIARANo
@@ -148,16 +156,16 @@ class EventAction : public G4UserEventAction
     G4double GainCLOVER = 1.0;
     G4double OffsetCLOVER = 0.0;
     
-    G4double    CLOVER_HPGeCrystal_EDep[8][4][CLOVER_TotalTimeSamples];
-    G4bool      CLOVER_HPGeCrystal_EDepVETO[8][4][CLOVER_TotalTimeSamples];
-    G4double    CLOVER_EDep[8][CLOVER_TotalTimeSamples];
+    G4double    CLOVER_HPGeCrystal_EDep[9][4][CLOVER_TotalTimeSamples];
+    G4bool      CLOVER_HPGeCrystal_EDepVETO[9][4][CLOVER_TotalTimeSamples];
+    G4double    CLOVER_EDep[9][CLOVER_TotalTimeSamples];
     
     void AddEnergyCLOVER_HPGeCrystal(G4int i, G4int j, G4int k, G4double a)	{CLOVER_HPGeCrystal_EDep[i][j][k] += a; };
     
     
     /////////////////////////////////////////
     //      CLOVER Shield BGO Crystals
-    G4double    CLOVER_BGO_EDep[8][16][CLOVER_Shield_BGO_TotalTimeSamples+CLOVER_ComptonSupression_TimeWindow];
+    G4double    CLOVER_BGO_EDep[9][16][CLOVER_Shield_BGO_TotalTimeSamples+CLOVER_ComptonSupression_TimeWindow];
     
     void AddEnergyBGODetectors(G4int i, G4int j, G4int k, G4double a)	{CLOVER_BGO_EDep[i][j][k] += a; };
     
@@ -186,52 +194,13 @@ class EventAction : public G4UserEventAction
     G4bool Get_PlasticScint_Trig(G4int i) {return PlasticScint_Trig[i]; };
     
     
-    /////////////////////////////////////////
-    //          VDC DETECTORS
-    G4double GainVDC = 1.0;
-    G4double OffsetVDC = 0.0;
+    ////////////////////////
+    //      LEPS
+    G4double    LEPS_HPGeCrystal_EDep[6][4][LEPS_TotalTimeSamples];
+    G4double    LEPS_EDep[6][LEPS_TotalTimeSamples];
     
-    // VDC_Observables[i][k]
-    G4double    VDC_Observables[4][hit_buffersize]; // buffer of approx. 50 possible hits
-    // i==0 => CELL NUMBER, where U1:(0->142), X1:(143->340), U2:(341->483), X2:(484->681)
-    // i==1 => Edep
-    // i==2 => E-weighted z-position
-    // i==3 => E-weighted time
-    // k => cell hits (not yet verified to be valid hits)
-    
-    //  Variables for RayTrace
-    G4double Xpos[2], Upos[2], Y[2];
-    G4double ThetaFP[2];
-    G4double ThetaSCAT[2];
-    
-    G4double a, a0 = -1.01703, a1 = -6.25653e-05, a2 = 0;
-    G4double b, b0 = 33.6679, b1 = -0.0025703, b2 = 0;
-    G4double EnergyThreshold;
-    
-    //  Variables for CalcYFP
-    G4double sinThetaU = 0.766044443;
-    G4double tanThetaU = 1.191753593;
-    G4double tmp1,tmp2;
-    G4double tanThetaFP;
-    
-    
+    void AddEnergyLEPS_HPGeCrystals(G4int i, G4int j, G4int k, G4double a)	{LEPS_HPGeCrystal_EDep[i][j][k] += a; };
 
-    void FillVDC_Observables(G4int k, G4int channelID, G4double Edep, G4double EW_zpos, G4double EW_t)
-    {
-        if(VDC_Observables[0][k] == -1)
-        {
-            VDC_Observables[0][k] = channelID;
-        }
-        
-        VDC_Observables[1][k] += Edep;
-        VDC_Observables[2][k] += EW_zpos;
-        VDC_Observables[3][k] += EW_t;
-    };
-
-    G4double GetVDC_ObservablesChannelID(G4int k)    {return VDC_Observables[0][k];};
-    
-    void RayTrace(G4int VDCNo, G4int XU_Wireplane);
-    void CalcYFP(G4int VDCNo);
 
     
     
@@ -290,95 +259,7 @@ class EventAction : public G4UserEventAction
     
 };
 
-
-inline void EventAction::RayTrace(G4int VDCNo, G4int XU_Wireplane)
-{
-    G4double signalWirePos, z_dd, sum_n=0.0, sum_x=0.0, sum_z=0.0, sum_xz=0.0, sum_x2=0.0;
-    
-    G4int wireChannelMin, wireChannelMax, wireOffset;
-    
-    ////    VDC 1
-    if(VDCNo==0 && XU_Wireplane==0) wireChannelMin = 0, wireChannelMax = 142, wireOffset = 0, EnergyThreshold = VDC1_U_WIRE_ThresholdEnergy;
-    if(VDCNo==0 && XU_Wireplane==1) wireChannelMin = 143, wireChannelMax = 340, wireOffset = 143, EnergyThreshold = VDC1_X_WIRE_ThresholdEnergy;
-    
-    ////    VDC 2
-    if(VDCNo==1 && XU_Wireplane==0) wireChannelMin = 341, wireChannelMax = 483, wireOffset = 341, EnergyThreshold = VDC2_U_WIRE_ThresholdEnergy;
-    if(VDCNo==1 && XU_Wireplane==1) wireChannelMin = 484, wireChannelMax = 681, wireOffset = 484, EnergyThreshold = VDC2_X_WIRE_ThresholdEnergy;
-    
-    for(G4int k=0; k<hit_buffersize; k++)
-    {
-        if( (VDC_Observables[0][k]>=wireChannelMin) && (VDC_Observables[0][k]<=wireChannelMax) && (VDC_Observables[1][k]>EnergyThreshold) )
-        {
-            signalWirePos = 4.0*(VDC_Observables[0][k] - wireOffset);  // mm
-            z_dd = VDC_Observables[2][k]/VDC_Observables[1][k];
-            
-            sum_n  += 1.0;
-            sum_x  += signalWirePos;
-            sum_z  += z_dd;
-            sum_xz += signalWirePos*z_dd;
-            sum_x2 += pow(signalWirePos,2);
-        }
-    }
-    
-    // Equation is of the form: z = ax + b
-    a = (sum_x*sum_z-sum_n*sum_xz)/(pow(sum_x,2)-sum_n*sum_x2);
-    b = (sum_x*sum_xz-sum_x2*sum_z)/(pow(sum_x,2)-sum_n*sum_x2);
-    
-    
-    if(XU_Wireplane==0)
-    {
-        Upos[VDCNo]  = (-1.)*b/a; // X position at the X Wireframe, mm
-    }
-    
-    
-    if(XU_Wireplane==1)
-    {
-        Xpos[VDCNo]  = (-1.)*b/a; // X position at the X Wireframe, mm
-        ThetaFP[VDCNo] = (-1.)*atan(a)/deg;
-        //G4cout << "Here is the ThetaFP[VDCNo]     -->     "<< ThetaFP[VDCNo] << G4endl;
-        ThetaSCAT[VDCNo] = (a0 + a1*Xpos[VDCNo])*ThetaFP[VDCNo] + (b0 + b1*Xpos[VDCNo]);
-    }
-    
-}
-
-
-
-inline void EventAction::CalcYFP(G4int VDCNo)
-{
-    tanThetaFP = tan(ThetaFP[VDCNo]*deg);
-    
-    //G4cout << "Here is the ThetaFP[VDCNo]     -->     "<< ThetaFP[VDCNo] << G4endl;
-    //G4cout << "Here is the tanThetaFP     -->     "<< tanThetaFP << G4endl;
-
-    /*
-    G4double sinThetaU = 0.766044443; //sin(U_WIRE_ANGLE/57.2957);
-    G4double tanThetaU = 1.191753593; //tan(U_WIRE_ANGLE/57.2957);
-    G4double tmp1,tmp2;
-    G4double tanThetaFP;
-    */
-    
-    // for UX configuration. See RN K600 book6 p20-23
-    //  tmp1=(u*tanfp+sinu*16);
-    //  tmp2=sinu*tanfp;
-    //  *y=(tmp1/tmp2-x)*tanu+76.27 -50;  // the 76.27 is the offset due to first u and x wires not sharing the same origin
-    // the -50 is to put it around zero
-    // for XU configuration
-    tmp1 = (Upos[VDCNo]*tanThetaFP - sinThetaU*16);
-    tmp2 = sinThetaU*tanThetaFP;
-    //Y[VDCNo] = -1*((tmp1/tmp2-Xpos[VDCNo])*tanThetaU + 26.21);
-    Y[VDCNo] = (Xpos[VDCNo] - (tmp1/tmp2))*tanThetaU + 35.;
-
-    /*
-    tmp1=(u*tanfp-sinu*16);
-    tmp2=sinu*tanfp;
-    *y=-1*((tmp1/tmp2-x)*tanu+26.21);
-    */
-    
-}
-
-
-
-
+/*
 inline void EventAction::AddAbs(G4double de, G4double dl) {
   fEnergyAbs += de; 
   fTrackLAbs += dl;
@@ -388,7 +269,9 @@ inline void EventAction::AddGap(G4double de, G4double dl) {
   fEnergyGap += de; 
   fTrackLGap += dl;
 }
-                     
+*/
+
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif

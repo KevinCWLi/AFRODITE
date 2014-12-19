@@ -99,7 +99,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     //              TIARA ARRAY
     ////////////////////////////////////////////
     
-    if(interactiontime < TIARA_TotalSampledTime && volumeName == "TIARA_AA_RS")
+    if((interactiontime < TIARA_TotalSampledTime) && (volumeName == "TIARA_AA_RS"))
     {
         edepTIARA_AA = aStep->GetTotalEnergyDeposit()/MeV;
 
@@ -111,10 +111,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             TIARA_RowNo = (channelID - (TIARANo*128))/8;
             TIARA_SectorNo = (channelID - (TIARANo*128))%8;
 
-            TIARA_AA_ITS = interactiontime/TIARA_SamplingTime;
+            iTS = interactiontime/TIARA_SamplingTime;
             edepTIARA_AA = aStep->GetTotalEnergyDeposit()/MeV;
             
-            if(fEventAction->GetVar_TIARA_AA(TIARANo, TIARA_RowNo, TIARA_SectorNo, 0, TIARA_AA_ITS)==0)
+            if(fEventAction->GetVar_TIARA_AA(TIARANo, TIARA_RowNo, TIARA_SectorNo, 0, iTS)==0)
             {
                 worldPosition = preStepPoint->GetPosition();
                 
@@ -141,12 +141,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                     if(xPosW>0 && yPosW<0) phi = phi + 360.; // deg
                 }
                 
-                fEventAction->SetVar_TIARA_AA(TIARANo, TIARA_RowNo, TIARA_SectorNo, 1, TIARA_AA_ITS, theta);
-                fEventAction->SetVar_TIARA_AA(TIARANo, TIARA_RowNo, TIARA_SectorNo, 2, TIARA_AA_ITS, phi);
+                fEventAction->SetVar_TIARA_AA(TIARANo, TIARA_RowNo, TIARA_SectorNo, 1, iTS, theta);
+                fEventAction->SetVar_TIARA_AA(TIARANo, TIARA_RowNo, TIARA_SectorNo, 2, iTS, phi);
 
             }
             
-            fEventAction->FillVar_TIARA_AA(TIARANo, TIARA_RowNo, TIARA_SectorNo, 0, TIARA_AA_ITS, edepTIARA_AA);
+            fEventAction->FillVar_TIARA_AA(TIARANo, TIARA_RowNo, TIARA_SectorNo, 0, iTS, edepTIARA_AA);
         }
     }
     
@@ -155,27 +155,24 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     //          PlasticScint DETECTORS
     ////////////////////////////////////////////
     
-    if (interactiontime < PlasticScint_TotalSampledTime)
+    if ((interactiontime < PlasticScint_TotalSampledTime) && (volumeName == "PlasticScint"))
     {
-        if (volumeName == "PlasticScint")
-        {
-            channelID = volume->GetCopyNo();
-            
-            PlasticScintNo = channelID;
-            
-            PlasticScint_ITS = interactiontime/PlasticScint_SamplingTime;
-            edepPlasticScint = aStep->GetTotalEnergyDeposit()/MeV;
-            
-            worldPosition = preStepPoint->GetPosition();
-            localPosition = theTouchable->GetHistory()->GetTopTransform().TransformPoint(worldPosition);
-            
-            fEventAction->AddEnergy_PlasticScint( PlasticScintNo, PlasticScint_ITS, edepPlasticScint);
-            fEventAction->TagTOF_PlasticScint(PlasticScintNo, PlasticScint_ITS, interactiontime);
-            fEventAction->AddEWpositionX_PlasticScint( PlasticScintNo, PlasticScint_ITS, edepPlasticScint*localPosition.x());
-            fEventAction->AddEWpositionY_PlasticScint( PlasticScintNo, PlasticScint_ITS, edepPlasticScint*localPosition.y());
-            
-            //if(fEventAction->Get_PlasticScint_Trig(i) == false) fEventAction->Set_PlasticScint_Trig(i, true);
-        }
+        channelID = volume->GetCopyNo();
+        
+        PlasticScintNo = channelID;
+        
+        iTS = interactiontime/PlasticScint_SamplingTime;
+        edepPlasticScint = aStep->GetTotalEnergyDeposit()/MeV;
+        
+        worldPosition = preStepPoint->GetPosition();
+        localPosition = theTouchable->GetHistory()->GetTopTransform().TransformPoint(worldPosition);
+        
+        fEventAction->AddEnergy_PlasticScint( PlasticScintNo, iTS, edepPlasticScint);
+        fEventAction->TagTOF_PlasticScint(PlasticScintNo, iTS, interactiontime);
+        fEventAction->AddEWpositionX_PlasticScint( PlasticScintNo, iTS, edepPlasticScint*localPosition.x());
+        fEventAction->AddEWpositionY_PlasticScint( PlasticScintNo, iTS, edepPlasticScint*localPosition.y());
+        
+        //if(fEventAction->Get_PlasticScint_Trig(i) == false) fEventAction->Set_PlasticScint_Trig(i, true);
     }
     
     
@@ -184,51 +181,63 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     //                  CLOVERS
     ////////////////////////////////////////////////
     
-    if(interactiontime < CLOVER_TotalSampledTime)
+    if((interactiontime < CLOVER_TotalSampledTime) && (volumeName == "CLOVER_HPGeCrystal"))
     {
-        if (volumeName == "CLOVER_HPGeCrystal")
-        {
-            channelID = volume->GetCopyNo();
-            
-            CLOVERNo = channelID/4;
-            CLOVER_HPGeCrystalNo = channelID%4;
-            
-            /*
-            G4cout << "Here is the copyNo    "<< copyNo << G4endl;
-            G4cout << "Here is the CLOVERNo    "<< CLOVERNo << G4endl;
-            G4cout << "Here is the CLOVER_HPGeCrystalNo    "<< CLOVER_HPGeCrystalNo << G4endl;
-            G4cout << " "<< G4endl;
-            */
-            
-            CLOVER_HPGeCrystal_ITS = interactiontime/CLOVER_SamplingTime;
-            edepCLOVER_HPGeCrystal = aStep->GetTotalEnergyDeposit()/keV;
-            
-            fEventAction->AddEnergyCLOVER_HPGeCrystal(CLOVERNo, CLOVER_HPGeCrystalNo, CLOVER_HPGeCrystal_ITS, edepCLOVER_HPGeCrystal);
-        }
+        channelID = volume->GetCopyNo();
+        
+        CLOVERNo = channelID/4;
+        CLOVER_HPGeCrystalNo = channelID%4;
+        
+        /*
+         G4cout << "Here is the copyNo    "<< copyNo << G4endl;
+         G4cout << "Here is the CLOVERNo    "<< CLOVERNo << G4endl;
+         G4cout << "Here is the CLOVER_HPGeCrystalNo    "<< CLOVER_HPGeCrystalNo << G4endl;
+         G4cout << " "<< G4endl;
+         */
+        
+        iTS = interactiontime/CLOVER_SamplingTime;
+        edepCLOVER_HPGeCrystal = aStep->GetTotalEnergyDeposit()/keV;
+        
+        fEventAction->AddEnergyCLOVER_HPGeCrystal(CLOVERNo, CLOVER_HPGeCrystalNo, iTS, edepCLOVER_HPGeCrystal);
     }
     
-    /*
-    if (interactiontime < CLOVER_Shield_BGO_TotalSampledTime)
+    
+    if(Activate_CLOVER_ComptonSupression && (interactiontime < CLOVER_Shield_BGO_TotalSampledTime) && (volumeName == "CLOVER_Shield_BGOCrystal"))
     {
-        for(G4int i=0; i<8; i++)
-        {
-            for(G4int l=0; l<16; l++)
-            {
-                if ( volume == fDetConstruction->GetVolume_CLOVER_Shield_BGOCrystal(i, l) && interactiontime <     CLOVER_Shield_BGO_TotalSampledTime )
-                {
-                    CLOVER_BGO_ITS = interactiontime/CLOVER_Shield_BGO_SamplingTime;
-                    edepCLOVER_BGOCrystal = aStep->GetTotalEnergyDeposit()/keV;
-                    
-                    fEventAction->AddEnergyBGODetectors(i, l, CLOVER_BGO_ITS, edepCLOVER_BGOCrystal);
-                    //G4cout << "Here is the edepCLOVER_BGOCrystal    "<< edepBGO << G4endl;
-                }
-            }
-        }
+        channelID = volume->GetCopyNo();
+
+        CLOVERNo = channelID/16;
+        CLOVER_BGOCrystalNo = channelID%16;
+        
+        iTS = interactiontime/CLOVER_Shield_BGO_SamplingTime;
+        edepCLOVER_BGOCrystal = aStep->GetTotalEnergyDeposit()/keV;
+        
+        fEventAction->AddEnergyBGODetectors(CLOVERNo, CLOVER_BGOCrystalNo, iTS, edepCLOVER_BGOCrystal);
+        //G4cout << "Here is the edepCLOVER_BGOCrystal    "<< edepBGO << G4endl;
     }
-    */
     
     
-    //if (volumeName=="TIARA_Assembly" && !fEventAction->GA_GetLineOfSight() )   G4cout << "Here is the TIARA_Assembly Hit!" << G4endl;
+    ////////////////////////////////////////////////
+    //              LEPS DETECTOR ARRAY
+    ////////////////////////////////////////////////
+    
+    
+    if((interactiontime < LEPS_TotalSampledTime) && (volumeName == "LEPSHPGeCrystal"))
+    {
+        channelID = volume->GetCopyNo();
+        
+        LEPSNo = channelID/4;
+        LEPS_HPGeCrystalNo = channelID%4;
+
+        iTS = interactiontime/LEPS_SamplingTime;
+        edepLEPS_HPGeCrystal = aStep->GetTotalEnergyDeposit()/keV;
+        
+        fEventAction->AddEnergyLEPS_HPGeCrystals(LEPSNo, LEPS_HPGeCrystalNo, iTS, edepLEPS_HPGeCrystal);
+        
+    }
+    
+    
+    
     
     ////////////////////////////////////////////
     //              TIARA ARRAY
@@ -241,25 +250,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         {
             channelID = volume->GetCopyNo();
             worldPosition = preStepPoint->GetPosition();
-            //worldPosition = worldPosition.unit();
  
             xPosW = worldPosition.x()/m;
             yPosW = worldPosition.y()/m;
             zPosW = worldPosition.z()/m;
             
-            /*
-            if(volumeName == "TIARA_SiliconWafer")
-            {
-                G4cout << " " << G4endl;
-                G4cout << "Here is the TIARA_SiliconWafer HIT" << G4endl;
-            }
-            
-            if(volumeName == "TIARA_AA_RS")
-            {
-                G4cout << " " << G4endl;
-                G4cout << "Here is the TIARA_AA_RS HIT" << G4endl;
-            }
-            */
             
             if(volumeName == "TIARA_AA_RS")
             {
@@ -303,7 +298,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 fEventAction->SetInputDist(0, theta);
                 fEventAction->SetInputDist(1, phi);
             }
-            //G4cout << "Here is the geantino Hit!     -->     " << G4endl;
+
         }
     }
 
@@ -311,37 +306,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     ////    Here, one declares the volumes that one considers will block the particles of interest and effectively mask the relevant volume of interest.
     if (GA_LineOfSightMODE && (volumeName == "TIARA_AA_RS" || volumeName=="TIARA_PCB" || volumeName=="TIARA_SiliconWafer"))
     {
-        //G4cout << "Here is the volumeName    "<< volumeName << G4endl;
         fEventAction->GA_SetLineOfSight(false);
     }
     
     
     
-    /*
-// Collect energy and track length step by step
-
-  // get volume of the current step
-  G4VPhysicalVolume* volume
-    = step->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
-  
-  // energy deposit
-  G4double edep = step->GetTotalEnergyDeposit();
-  
-    
-  // step length
-  G4double stepLength = 0.;
-  if ( step->GetTrack()->GetDefinition()->GetPDGCharge() != 0. ) {
-    stepLength = step->GetStepLength();
-  }
-      
-  if ( volume == fDetConstruction->GetAbsorberPV() ) {
-    fEventAction->AddAbs(edep,stepLength);
-  }
-  
-  if ( volume == fDetConstruction->GetGapPV() ) {
-    fEventAction->AddGap(edep,stepLength);
-  }
-    */
+   
     
 }
 
