@@ -69,10 +69,10 @@ private:
     G4ThreeVector localPosition;
     
     
-    ////    PADDLE DETECTOR - Plastic Scintillator
-    G4double    edepPADDLE;
-    G4int       PADDLE_ITS;  // Interaction Time Sample for the Neutron Wall Plastic Scintillators
-    G4int       PADDLENo;
+    ////    PlasticScint DETECTOR - Plastic Scintillator
+    G4double    edepPlasticScint;
+    G4int       PlasticScint_ITS;  // Interaction Time Sample for the Neutron Wall Plastic Scintillators
+    G4int       PlasticScintNo;
     
     ////    VDC DETECTOR - Plastic Scintillator
     G4double    edepVDC;

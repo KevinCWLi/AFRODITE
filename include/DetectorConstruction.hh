@@ -86,8 +86,8 @@ const G4int     numberOf_CLOVER_Shields = 9;
 const G4int     numberOf_TIGRESS = 1;
 const G4int     numberOf_TIGRESS_BGO = 1;
 
-///////////////     PADDLE DETECTORS     ///////////////////
-const G4int     numberOf_PADDLE = 3;
+///////////////     PLASTIC SCINTILLATOR DETECTORS     ///////////////////
+const G4int     numberOf_PlasticScint = 12;
 
 ///////////////     LEPS DETECTORS     ///////////////////
 const G4int     numberOf_LEPS = 8;
@@ -166,20 +166,21 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 
     
     ///////////////////////////////
-    //      PADDLE DETECTORS
+    //      PlasticScint DETECTORS
     ///////////////////////////////
     
-    G4bool              PADDLE_AllPresent_Override;
-    G4bool              PADDLE_AllAbsent_Override;
-    G4bool              PADDLE_Presence[numberOf_PADDLE];
-    G4RotationMatrix    PADDLE_rotm[numberOf_PADDLE];
-    G4Transform3D       PADDLE_transform[numberOf_PADDLE];
-    G4ThreeVector       PADDLE_CentrePosition[numberOf_PADDLE];
-    G4double            PADDLE_CentrePositionX[numberOf_PADDLE];
-    G4double            PADDLE_CentrePositionZ[numberOf_PADDLE];
-    G4double            PADDLE_RotationY[numberOf_PADDLE];
+    G4bool              PlasticScint_AllPresent_Override;
+    G4bool              PlasticScint_AllAbsent_Override;
+    G4bool              PlasticScint_Presence[numberOf_PlasticScint];
+    G4RotationMatrix    PlasticScint_rotm[numberOf_PlasticScint];
+    G4Transform3D       PlasticScint_transform[numberOf_PlasticScint];
+    G4ThreeVector       PlasticScint_CentrePosition[numberOf_PlasticScint];
+    G4double            PlasticScint_CentrePositionX[numberOf_PlasticScint];
+    G4double            PlasticScint_CentrePositionY[numberOf_PlasticScint];
+    G4double            PlasticScint_CentrePositionZ[numberOf_PlasticScint];
+    G4double            PlasticScint_RotationY[numberOf_PlasticScint];
     
-    G4VPhysicalVolume*  PhysiPADDLE;
+    G4VPhysicalVolume*  PhysiPlasticScint;
     
     /////////////////////////////////////
     //              HAGAR

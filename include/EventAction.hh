@@ -73,10 +73,10 @@ const G4int         VDC_TotalTimeSamples = 15; //
 const G4double      VDC_TotalSampledTime = VDC_SamplingTime * VDC_TotalTimeSamples; // ns
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-///////////////     PADDLE Detectors - Analogue Sampling    ///////////////////
-const G4double      PADDLE_SamplingTime = 10; // ns
-const G4int         PADDLE_TotalTimeSamples = 15; //
-const G4double      PADDLE_TotalSampledTime = PADDLE_SamplingTime * PADDLE_TotalTimeSamples; // ns
+///////////////     PlasticScint Detectors - Analogue Sampling    ///////////////////
+const G4double      PlasticScint_SamplingTime = 10; // ns
+const G4int         PlasticScint_TotalTimeSamples = 15; //
+const G4double      PlasticScint_TotalSampledTime = PlasticScint_SamplingTime * PlasticScint_TotalTimeSamples; // ns
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 ///////////////     CLOVER Detectors - PIXIE16 Sampling     ///////////////////
@@ -110,8 +110,8 @@ const G4double      CLOVER_HPGeCrystal_ThresholdEnergy = 6.;   // keV
 ///////////////     CLOVER BGO Anti-Compton Shield - Energy Threshold     ///////////////////
 const G4double      CLOVER_BGO_ThresholdEnergy = 5.;  //keV
 
-///////////////     PADDLE, Plastic Scintillators - Energy Threshold     ///////////////////
-const G4double      PADDLE_ThresholdEnergy = 0.5;  //  MeV
+///////////////     PlasticScint, Plastic Scintillators - Energy Threshold     ///////////////////
+const G4double      PlasticScint_ThresholdEnergy = 0.5;  //  MeV
 
 ///////////////     Average particles per packet, (from beam intensity and frequency)     ///////
 const G4bool        Activate_CyclotronBeam_Timing = false;
@@ -177,27 +177,27 @@ class EventAction : public G4UserEventAction
     
     
     /////////////////////////////////////////
-    //          PADDLE DETECTORS
-    G4double GainPADDLE = 1.0;
-    G4double OffsetPADDLE = 0.0;
+    //      PlasticScint DETECTORS
+    G4double    GainPlasticScint = 1.0;
+    G4double    OffsetPlasticScint = 0.0;
     
-    G4double    PADDLE_EDep[3][PADDLE_TotalTimeSamples];
-    G4double    PADDLE_TOF[3][PADDLE_TotalTimeSamples];
-    G4bool      PADDLE_Trig[3];
-    G4int       PADDLE_numberDetTrig;
+    G4double    PlasticScint_EDep[3][PlasticScint_TotalTimeSamples];
+    G4double    PlasticScint_TOF[3][PlasticScint_TotalTimeSamples];
+    G4bool      PlasticScint_Trig[3];
+    G4int       PlasticScint_numberDetTrig;
     
     //      Energy Weighted Positioning
-    G4double       PADDLE_EWpositionX[3][PADDLE_TotalTimeSamples];
-    G4double       PADDLE_EWpositionY[3][PADDLE_TotalTimeSamples];
-    G4double       PADDLE_positionX[3][PADDLE_TotalTimeSamples];
-    G4double       PADDLE_positionY[3][PADDLE_TotalTimeSamples];
+    G4double       PlasticScint_EWpositionX[3][PlasticScint_TotalTimeSamples];
+    G4double       PlasticScint_EWpositionY[3][PlasticScint_TotalTimeSamples];
+    G4double       PlasticScint_positionX[3][PlasticScint_TotalTimeSamples];
+    G4double       PlasticScint_positionY[3][PlasticScint_TotalTimeSamples];
     
-    void AddEnergy_PADDLE(G4int i, G4int j, G4double a)	{PADDLE_EDep[i][j] += a; };
-    void TagTOF_PADDLE(G4int i, G4int j, G4double a)	{PADDLE_TOF[i][j] = a; };
-    void AddEWpositionX_PADDLE(G4int i, G4int j, G4double a)  {PADDLE_EWpositionX[i][j] += a; };
-    void AddEWpositionY_PADDLE(G4int i, G4int j, G4double a)  {PADDLE_EWpositionY[i][j] += a; };
-    void Set_PADDLE_Trig(G4int i, G4bool b) {PADDLE_Trig[i] = b; };
-    G4bool Get_PADDLE_Trig(G4int i) {return PADDLE_Trig[i]; };
+    void AddEnergy_PlasticScint(G4int i, G4int j, G4double a)	{PlasticScint_EDep[i][j] += a; };
+    void TagTOF_PlasticScint(G4int i, G4int j, G4double a)	{PlasticScint_TOF[i][j] = a; };
+    void AddEWpositionX_PlasticScint(G4int i, G4int j, G4double a)  {PlasticScint_EWpositionX[i][j] += a; };
+    void AddEWpositionY_PlasticScint(G4int i, G4int j, G4double a)  {PlasticScint_EWpositionY[i][j] += a; };
+    void Set_PlasticScint_Trig(G4int i, G4bool b) {PlasticScint_Trig[i] = b; };
+    G4bool Get_PlasticScint_Trig(G4int i) {return PlasticScint_Trig[i]; };
     
     
     /////////////////////////////////////////
