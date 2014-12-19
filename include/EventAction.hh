@@ -90,7 +90,8 @@ const G4double      CLOVER_Shield_BGO_TotalSampledTime = CLOVER_Shield_BGO_Sampl
 
 
 ///////////////     LEPS Detectors - PIXIE16 Sampling     ///////////////////
-const G4bool        Activate_LEPS_ADDBACK = false;
+const G4bool        Activate_LEPS_ADDBACK = true;
+
 const G4double      LEPS_SamplingTime = 10; // ns
 const G4int         LEPS_TotalTimeSamples = 10; //
 const G4double      LEPS_TotalSampledTime = LEPS_SamplingTime * LEPS_TotalTimeSamples; // ns
@@ -104,6 +105,9 @@ const G4double      CLOVER_HPGeCrystal_ThresholdEnergy = 6.;   // keV
 
 ///////////////     CLOVER BGO Anti-Compton Shield - Energy Threshold     ///////////////////
 const G4double      CLOVER_BGO_ThresholdEnergy = 5.;  //keV
+
+///////////////     LEPS - Energy Threshold     ///////////////////
+const G4double      LEPS_HPGeCrystal_ThresholdEnergy = 6.;   // keV
 
 ///////////////     PlasticScint, Plastic Scintillators - Energy Threshold     ///////////////////
 const G4double      PlasticScint_ThresholdEnergy = 0.5;  //  MeV
@@ -196,6 +200,9 @@ class EventAction : public G4UserEventAction
     
     ////////////////////////
     //      LEPS
+    G4double GainLEPS = 1.0;
+    G4double OffsetLEPS = 0.0;
+    
     G4double    LEPS_HPGeCrystal_EDep[6][4][LEPS_TotalTimeSamples];
     G4double    LEPS_EDep[6][LEPS_TotalTimeSamples];
     
