@@ -110,7 +110,7 @@ G4ThreadLocal G4FieldManager* DetectorConstruction::fieldManagerMagneticField_AF
 
 DetectorConstruction::DetectorConstruction()
  : G4VUserDetectorConstruction(),
-fAbsorberPV(0), fGapPV(0), fCheckOverlaps(false), PhysiCLOVER_HPGeCrystal(0), PhysiCLOVER_Shield_BGOCrystal(0), PhysiCLOVER_Shield_PMT(0), PhysiPADDLE(0), PhysiHAGAR_NaICrystal(0), PhysiHAGAR_Annulus(0), PhysiHAGAR_FrontDisc(0), PhysiAFRODITE_Dipole1(0), PhysiAFRODITE_Quadrupole(0)
+fAbsorberPV(0), fGapPV(0), fCheckOverlaps(false), PhysiCLOVER_HPGeCrystal(0), PhysiCLOVER_Shield_BGOCrystal(0), PhysiCLOVER_Shield_PMT(0), PhysiPlasticScint(0), PhysiHAGAR_NaICrystal(0), PhysiHAGAR_Annulus(0), PhysiHAGAR_FrontDisc(0), PhysiAFRODITE_Dipole1(0), PhysiAFRODITE_Quadrupole(0)
 {
     WorldSize = 15.*m;
 }
@@ -139,16 +139,16 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     CLOVER_AllAbsent_Override = true;
     
     CLOVER_Shield_AllPresent_Override = false;
-    CLOVER_Shield_AllAbsent_Override = false;
+    CLOVER_Shield_AllAbsent_Override = true;
     
     
     //  CLOVER 1
     CLOVER_Presence[0] = true;
     CLOVER_Shield_Presence[0] = true;
     CLOVER_Distance[0] = 0*cm;
-    //CLOVER_phi[0] = 90*deg;
-    //CLOVER_theta[0] = 135*deg;
-    //CLOVER_rotm[0].rotateX(45. *deg);
+    CLOVER_phi[0] = 90*deg;
+    CLOVER_theta[0] = 135*deg;
+    CLOVER_rotm[0].rotateX(45.*deg);
     
     //  CLOVER 2
     CLOVER_Presence[1] = false;
@@ -156,7 +156,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     CLOVER_Distance[1] = 10*cm;
     CLOVER_phi[1] = 0*deg;
     CLOVER_theta[1] = 135*deg;
-    CLOVER_rotm[1].rotateY(-45.0 *deg);
+    CLOVER_rotm[1].rotateY(-45.0*deg);
     
     //  CLOVER 3
     CLOVER_Presence[2] = false;
@@ -164,7 +164,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     CLOVER_Distance[2] = 10*cm;
     CLOVER_phi[2] = 270*deg;
     CLOVER_theta[2] = 135*deg;
-    CLOVER_rotm[2].rotateX(-45.0 *deg);
+    CLOVER_rotm[2].rotateX(-45.0*deg);
     
     //  CLOVER 4
     CLOVER_Presence[3] = false;
@@ -172,7 +172,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     CLOVER_Distance[3] = 10*cm;
     CLOVER_phi[3] = 180*deg;
     CLOVER_theta[3] = 135*deg;
-    CLOVER_rotm[3].rotateY(45.0 *deg);
+    CLOVER_rotm[3].rotateY(45.0*deg);
     
     //  CLOVER 5
     CLOVER_Presence[4] = false;
@@ -181,7 +181,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     CLOVER_phi[4] = 45*deg;
     CLOVER_theta[4] = 90*deg;
     CLOVER_rotm[4].rotateY(90.0 *deg);
-    CLOVER_rotm[4].rotateZ(-135.0 *deg);
+    CLOVER_rotm[4].rotateZ(-135.0*deg);
     
     //  CLOVER 6
     CLOVER_Presence[5] = false;
@@ -189,7 +189,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     CLOVER_Distance[5] = 10*cm;
     CLOVER_phi[5] = 0*deg;
     CLOVER_theta[5] = 90*deg;
-    CLOVER_rotm[5].rotateY(-90.0 *deg);
+    CLOVER_rotm[5].rotateY(-90.0*deg);
     
     //  CLOVER 7
     CLOVER_Presence[6] = false;
@@ -197,7 +197,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     CLOVER_Distance[6] = 10*cm;
     CLOVER_phi[6] = 180*deg;
     CLOVER_theta[6] = 90*deg;
-    CLOVER_rotm[6].rotateY(90.0 *deg);
+    CLOVER_rotm[6].rotateY(90.0*deg);
     
     //  CLOVER 8
     CLOVER_Presence[7] = false;
@@ -205,8 +205,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     CLOVER_Distance[7] = 10*cm;
     CLOVER_phi[7] = 135*deg;
     CLOVER_theta[7] = 90*deg;
-    CLOVER_rotm[7].rotateY(90.0 *deg);
-    CLOVER_rotm[7].rotateZ(-45.0 *deg);
+    CLOVER_rotm[7].rotateY(90.0*deg);
+    CLOVER_rotm[7].rotateZ(-45.0*deg);
     
     
     //  CLOVER 9
@@ -231,42 +231,126 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     }
     
     
-    /////////////////////////////
-    ////    PADDLE SETUP
+    /////////////////////////////////////////
+    ////        PlasticScint SETUP
     
-    PADDLE_AllPresent_Override = false;
-    PADDLE_AllAbsent_Override = true;
-    
-    //  PADDLE 1
-    PADDLE_Presence[0] = true;
-    PADDLE_CentrePositionX[0] = 513.726; // cm
-    PADDLE_CentrePositionZ[0] = 324.573; // cm
-    PADDLE_CentrePosition[0] = G4ThreeVector(PADDLE_CentrePositionX[0]*cm - 200.*cm, 0., PADDLE_CentrePositionZ[0]*cm - 100.*cm);
-    PADDLE_RotationY[0] = -14.03; // deg
-    PADDLE_rotm[0].rotateY(PADDLE_RotationY[0]*deg);
-    
-    //  PADDLE 2
-    PADDLE_Presence[1] = false;
-    PADDLE_CentrePositionX[1] = 529.38; // cm
-    PADDLE_CentrePositionZ[1] = 320.34; // cm
-    PADDLE_CentrePosition[1] = G4ThreeVector(PADDLE_CentrePositionX[1]*cm - 200.*cm, 0., PADDLE_CentrePositionZ[1]*cm - 100.*cm);
-    PADDLE_RotationY[1] = -14.03; // deg
-    PADDLE_rotm[1].rotateY(PADDLE_RotationY[1]*deg);
-    
-    //  PADDLE 3
-    PADDLE_Presence[2] = true;
-    PADDLE_CentrePositionX[2] = 529.38; // cm
-    PADDLE_CentrePositionZ[2] = 320.34; // cm
-    PADDLE_CentrePosition[2] = G4ThreeVector(PADDLE_CentrePositionX[2]*cm - 200.*cm, 0., PADDLE_CentrePositionZ[2]*cm - 100.*cm);
-    PADDLE_RotationY[2] = -14.03; // deg
-    PADDLE_rotm[2].rotateY(PADDLE_RotationY[2]*deg);
+    PlasticScint_AllPresent_Override = true;
+    PlasticScint_AllAbsent_Override = false;
     
     
-    for(G4int i=0; i<3; i++)
+    //  PlasticScint 1
+    PlasticScint_Presence[0] = true;
+    PlasticScint_CentrePositionX[0] = 0.; // cm
+    PlasticScint_CentrePositionY[0] = 28.75; // cm
+    PlasticScint_CentrePositionZ[0] = 180.; // cm
+    PlasticScint_CentrePosition[0] = G4ThreeVector(PlasticScint_CentrePositionX[0]*cm, PlasticScint_CentrePositionY[0]*cm, PlasticScint_CentrePositionZ[0]*cm);
+    //PlasticScint_RotationY[0] = -14.03; // deg
+    //PlasticScint_rotm[0].rotateY(PlasticScint_RotationY[0]*deg);
+    
+    //  PlasticScint 2
+    PlasticScint_Presence[1] = true;
+    PlasticScint_CentrePositionX[1] = 0.; // cm
+    PlasticScint_CentrePositionY[1] = 17.25; // cm
+    PlasticScint_CentrePositionZ[1] = 180.; // cm
+    PlasticScint_CentrePosition[1] = G4ThreeVector(PlasticScint_CentrePositionX[1]*cm, PlasticScint_CentrePositionY[1]*cm, PlasticScint_CentrePositionZ[1]*cm);
+    //PlasticScint_RotationY[1] = -14.13; // deg
+    //PlasticScint_rotm[1].rotateY(PlasticScint_RotationY[1]*deg);
+    
+    //  PlasticScint 3
+    PlasticScint_Presence[2] = true;
+    PlasticScint_CentrePositionX[2] = 0.; // cm
+    PlasticScint_CentrePositionY[2] = 5.75; // cm
+    PlasticScint_CentrePositionZ[2] = 180.; // cm
+    PlasticScint_CentrePosition[2] = G4ThreeVector(PlasticScint_CentrePositionX[2]*cm, PlasticScint_CentrePositionY[2]*cm, PlasticScint_CentrePositionZ[2]*cm);
+    //PlasticScint_RotationY[2] = -14.23; // deg
+    //PlasticScint_rotm[2].rotateY(PlasticScint_RotationY[2]*deg);
+    
+    //  PlasticScint 4
+    PlasticScint_Presence[3] = true;
+    PlasticScint_CentrePositionX[3] = 0.; // cm
+    PlasticScint_CentrePositionY[3] = -5.75; // cm
+    PlasticScint_CentrePositionZ[3] = 180.; // cm
+    PlasticScint_CentrePosition[3] = G4ThreeVector(PlasticScint_CentrePositionX[3]*cm, PlasticScint_CentrePositionY[3]*cm, PlasticScint_CentrePositionZ[3]*cm);
+    //PlasticScint_RotationY[3] = -14.33; // deg
+    //PlasticScint_rotm[3].rotateY(PlasticScint_RotationY[3]*deg);
+    
+    //  PlasticScint 5
+    PlasticScint_Presence[4] = true;
+    PlasticScint_CentrePositionX[4] = 0.; // cm
+    PlasticScint_CentrePositionY[4] = -17.25; // cm
+    PlasticScint_CentrePositionZ[4] = 180.; // cm
+    PlasticScint_CentrePosition[4] = G4ThreeVector(PlasticScint_CentrePositionX[4]*cm, PlasticScint_CentrePositionY[4]*cm, PlasticScint_CentrePositionZ[4]*cm);
+    //PlasticScint_RotationY[4] = -14.43; // deg
+    //PlasticScint_rotm[4].rotateY(PlasticScint_RotationY[4]*deg);
+    
+    //  PlasticScint 6
+    PlasticScint_Presence[5] = true;
+    PlasticScint_CentrePositionX[5] = 0.; // cm
+    PlasticScint_CentrePositionY[5] = -28.75; // cm
+    PlasticScint_CentrePositionZ[5] = 180.; // cm
+    PlasticScint_CentrePosition[5] = G4ThreeVector(PlasticScint_CentrePositionX[5]*cm, PlasticScint_CentrePositionY[5]*cm, PlasticScint_CentrePositionZ[5]*cm);
+    //PlasticScint_RotationY[5] = -14.53; // deg
+    //PlasticScint_rotm[5].rotateY(PlasticScint_RotationY[5]*deg);
+    
+    //  PlasticScint 7
+    PlasticScint_Presence[6] = true;
+    PlasticScint_CentrePositionX[6] = 0.; // cm
+    PlasticScint_CentrePositionY[6] = 28.75; // cm
+    PlasticScint_CentrePositionZ[6] = 180. + 11.0; // cm
+    PlasticScint_CentrePosition[6] = G4ThreeVector(PlasticScint_CentrePositionX[6]*cm, PlasticScint_CentrePositionY[6]*cm, PlasticScint_CentrePositionZ[6]*cm);
+    //PlasticScint_RotationY[6] = -14.63; // deg
+    //PlasticScint_rotm[6].rotateY(PlasticScint_RotationY[6]*deg);
+    
+    //  PlasticScint 8
+    PlasticScint_Presence[7] = true;
+    PlasticScint_CentrePositionX[7] = 0.; // cm
+    PlasticScint_CentrePositionY[7] = 17.25; // cm
+    PlasticScint_CentrePositionZ[7] = 180. + 11.0; // cm
+    PlasticScint_CentrePosition[7] = G4ThreeVector(PlasticScint_CentrePositionX[7]*cm, PlasticScint_CentrePositionY[7]*cm, PlasticScint_CentrePositionZ[7]*cm);
+    //PlasticScint_RotationY[7] = -14.73; // deg
+    //PlasticScint_rotm[7].rotateY(PlasticScint_RotationY[7]*deg);
+    
+    //  PlasticScint 9
+    PlasticScint_Presence[8] = true;
+    PlasticScint_CentrePositionX[8] = 0.; // cm
+    PlasticScint_CentrePositionY[8] = 5.75; // cm
+    PlasticScint_CentrePositionZ[8] = 180. + 11.0; // cm
+    PlasticScint_CentrePosition[8] = G4ThreeVector(PlasticScint_CentrePositionX[8]*cm, PlasticScint_CentrePositionY[8]*cm, PlasticScint_CentrePositionZ[8]*cm);
+    //PlasticScint_RotationY[8] = -14.83; // deg
+    //PlasticScint_rotm[8].rotateY(PlasticScint_RotationY[8]*deg);
+    
+    //  PlasticScint 10
+    PlasticScint_Presence[9] = true;
+    PlasticScint_CentrePositionX[9] = 0.; // cm
+    PlasticScint_CentrePositionY[9] = -5.75; // cm
+    PlasticScint_CentrePositionZ[9] = 180. + 11.0; // cm
+    PlasticScint_CentrePosition[9] = G4ThreeVector(PlasticScint_CentrePositionX[9]*cm, PlasticScint_CentrePositionY[9]*cm, PlasticScint_CentrePositionZ[9]*cm);
+    //PlasticScint_RotationY[9] = -14.93; // deg
+    //PlasticScint_rotm[9].rotateY(PlasticScint_RotationY[9]*deg);
+    
+    //  PlasticScint 11
+    PlasticScint_Presence[10] = true;
+    PlasticScint_CentrePositionX[10] = 0.; // cm
+    PlasticScint_CentrePositionY[10] = -17.25; // cm
+    PlasticScint_CentrePositionZ[10] = 180. + 11.0; // cm
+    PlasticScint_CentrePosition[10] = G4ThreeVector(PlasticScint_CentrePositionX[10]*cm, PlasticScint_CentrePositionY[10]*cm, PlasticScint_CentrePositionZ[10]*cm);
+    //PlasticScint_RotationY[10] = -14.103; // deg
+    //PlasticScint_rotm[10].rotateY(PlasticScint_RotationY[10]*deg);
+    
+    //  PlasticScint 12
+    PlasticScint_Presence[11] = true;
+    PlasticScint_CentrePositionX[11] = 0.; // cm
+    PlasticScint_CentrePositionY[11] = -28.75; // cm
+    PlasticScint_CentrePositionZ[11] = 180. + 11.0; // cm
+    PlasticScint_CentrePosition[11] = G4ThreeVector(PlasticScint_CentrePositionX[11]*cm, PlasticScint_CentrePositionY[11]*cm, PlasticScint_CentrePositionZ[11]*cm);
+    //PlasticScint_RotationY[11] = -14.113; // deg
+    //PlasticScint_rotm[11].rotateY(PlasticScint_RotationY[11]*deg);
+    
+    for(G4int i=0; i<numberOf_PlasticScint; i++)
     {
-        if(PADDLE_AllPresent_Override) PADDLE_Presence[i] = true;
-        if(PADDLE_AllAbsent_Override) PADDLE_Presence[i] = false;
-        if(PADDLE_AllPresent_Override && PADDLE_AllAbsent_Override) PADDLE_Presence[i] = false;
+        if(PlasticScint_AllPresent_Override) PlasticScint_Presence[i] = true;
+        if(PlasticScint_AllAbsent_Override) PlasticScint_Presence[i] = false;
+        if(PlasticScint_AllPresent_Override && PlasticScint_AllAbsent_Override) PlasticScint_Presence[i] = false;
     }
 
     
@@ -435,10 +519,9 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
     Heavimet_Material->AddElement( Cobalt, 0.50*perCent);
     Heavimet_Material->AddElement( Copper, 0.10*perCent);
     
-    ////    TIARA Detector Materials
-    //G4Material*         TIARA_PCBMaterial;
     
-    ////    PADDLE Detector Materials
+    ////    PlasticScint Detector Materials
+    ////    This Plastic is identical in composition to NE102, which is the plastic utilized in the Neutron Wall plastic Scintillators which have been employed within the AFRODITE vault for numerous (3He,n) experiments
     G4Material* BC408_Material = new G4Material("BC408_Material",1.032*g/cm3, 2);
     BC408_Material->AddElement( Hydrogen, 8.4748*perCent);
     BC408_Material->AddElement( Carbon, 91.5252*perCent);
@@ -1085,62 +1168,33 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         }
     }
     
-    ////////////////////////////////////////////////////////////////
-    //      PLASTIC SCINTILLATOR - NEUTRON WALL DETECTORS       ////
-    ////////////////////////////////////////////////////////////////
-    /*
-    G4ThreeVector position_PlasticScint[12];
-    
-    position_PlasticScint[0] = G4ThreeVector(0., 287.5*mm, 0.);
-    position_PlasticScint[1] = G4ThreeVector(0., 172.5*mm, 0.);
-    position_PlasticScint[2] = G4ThreeVector(0., 57.5*mm, 0.);
-    position_PlasticScint[3] = G4ThreeVector(0., -57.5*mm, 0.);
-    position_PlasticScint[4] = G4ThreeVector(0., -172.5*mm, 0.);
-    position_PlasticScint[5] = G4ThreeVector(0., -287.5*mm, 0.);
-    position_PlasticScint[6] = G4ThreeVector(0., 287.5*mm, -110.0*mm);
-    position_PlasticScint[7] = G4ThreeVector(0., 172.5*mm, -110.0*mm);
-    position_PlasticScint[8] = G4ThreeVector(0., 57.5*mm, -110.0*mm);
-    position_PlasticScint[9] = G4ThreeVector(0., -57.5*mm, -110.0*mm);
-    position_PlasticScint[10] = G4ThreeVector(0., -172.5*mm, -110.0*mm);
-    position_PlasticScint[11] = G4ThreeVector(0., -287.5*mm, -110.0*mm);
-    
-    G4Box* Solid_PlasticScint = new G4Box("Scintillator", 600*mm/2, 100*mm/2, 100*mm/2);
-    
-    for(G4int i=0; i<12; i++)
-    {
-        Logic_PlasticScint[i] = new G4LogicalVolume(Solid_PlasticScint, PlasticScintillatorMaterial,"Scintillator",0,0,0);
-    }
-    */
-    
-    //////////////////////////////////
-    //      PADDLE DEFINITION       //
-    //////////////////////////////////
-    
-    G4Box* Solid_PADDLE_1 = new G4Box("Solid_PADDLE_1", (122/2)*cm, (10.2/2)*cm, (0.3175/2)*cm);
-    G4Box* Solid_PADDLE_2 = new G4Box("Solid_PADDLE_2", (122/2)*cm, (10.2/2)*cm, (0.6350/2)*cm);
-    G4Box* Solid_PADDLE_3 = new G4Box("Solid_PADDLE_3", (122/2)*cm, (10.2/2)*cm, (1.2700/2)*cm);
-    
-    G4LogicalVolume * Logic_PADDLE[numberOf_PADDLE];
 
-    Logic_PADDLE[0] = new G4LogicalVolume(Solid_PADDLE_1, BC408_Material,"PADDLE_1",0,0,0);
-    Logic_PADDLE[1] = new G4LogicalVolume(Solid_PADDLE_2, BC408_Material,"PADDLE_2",0,0,0);
-    Logic_PADDLE[2] = new G4LogicalVolume(Solid_PADDLE_3, BC408_Material,"PADDLE_3",0,0,0);
-    
-    
     //////////////////////////////////////
-    //      PADDLE INITIALISATION       //
+    //      PlasticScint DEFINITION     //
     //////////////////////////////////////
+
+    G4LogicalVolume * Logic_PlasticScint[numberOf_PlasticScint];
+    G4Box* Solid_PlasticScint = new G4Box("Scintillator", (600/2)*mm, (100/2)*mm, (100/2)*mm);
     
-    
-    for(G4int i=0; i<3; i++)
+    for(G4int i=0; i<numberOf_PlasticScint; i++)
     {
-        if(PADDLE_Presence[i])
+        Logic_PlasticScint[i] = new G4LogicalVolume(Solid_PlasticScint, BC408_Material,"Scintillator",0,0,0);
+    }
+
+    
+    //////////////////////////////////////////
+    //      PlasticScint INITIALISATION     //
+    //////////////////////////////////////////
+    
+    for(G4int i=0; i<numberOf_PlasticScint; i++)
+    {
+        if(PlasticScint_Presence[i])
         {
-            PADDLE_transform[i] = G4Transform3D(PADDLE_rotm[i],PADDLE_CentrePosition[i]);
+            PlasticScint_transform[i] = G4Transform3D(PlasticScint_rotm[i],PlasticScint_CentrePosition[i]);
             
-            PhysiPADDLE = new G4PVPlacement(PADDLE_transform[i],
-                                            Logic_PADDLE[i],    // its logical volume
-                                            "PADDLE",           // its name
+            PhysiPlasticScint = new G4PVPlacement(PlasticScint_transform[i],
+                                            Logic_PlasticScint[i],    // its logical volume
+                                            "PlasticScint",           // its name
                                             LogicWorld,         // its mother  volume
                                             false,              // no boolean operations
                                             i,                  // copy number
@@ -1391,12 +1445,12 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
     
     
     //////////////////////////////////
-    //      PADDLE VISUALIZATION
+    //      PlasticScint VISUALIZATION
     //////////////////////////////////
     
     G4VisAttributes* scintillatorVisAtt = new G4VisAttributes(G4Colour(1.0, 1.0, 0.0));
-    for(G4int i=0; i<3; i++)
-    {Logic_PADDLE[i] -> SetVisAttributes(scintillatorVisAtt);}
+    for(G4int i=0; i<numberOf_PlasticScint; i++)
+    {Logic_PlasticScint[i] -> SetVisAttributes(scintillatorVisAtt);}
     
     
     //////////////////////////////////
