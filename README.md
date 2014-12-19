@@ -9,6 +9,18 @@ I would like to thank the numerous staff at iThemba who put up with my requests 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+The current implemented detectors include the following:
+
+- Clover HPGe detectors (Eurogam type), manufactured by Canberra.
+- The BGO shield complimenting the Clover HPGe detectors (Eurogam type), manufactured by Eurisys.
+- LEPS HPGe detectors, manufactured by Eurisys.
+- A neutron wall, composed of a total of 12 plastic scintillators (NE102).
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 A CAD model import interface called CADMesh (authored primarily by Christopher Poole) is used within this simulation for implementing complex geometries. This needs to be obtained from the following GitHub repository: https://github.com/christopherpoole/CADMesh
 
 Alternatively, one could comment out the relevant CADMesh associated code and use only the hard-coded geometrical objects. It should be noted that an effort has been made to hard-code the geometries in GEANT4 when possible as this has computational advantages.
+
+
