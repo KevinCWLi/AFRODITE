@@ -90,7 +90,7 @@ const G4int     numberOf_TIGRESS_BGO = 1;
 const G4int     numberOf_PlasticScint = 12;
 
 ///////////////     LEPS DETECTORS     ///////////////////
-const G4int     numberOf_LEPS = 8;
+const G4int     numberOf_LEPS = 6;
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -182,6 +182,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     
     G4VPhysicalVolume*  PhysiPlasticScint;
     
+    
     /////////////////////////////////////
     //              HAGAR
     /////////////////////////////////////
@@ -206,14 +207,39 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4VPhysicalVolume*  PhysiHAGAR_FrontDisc;
     
     
+    /////////////////////////////////////
+    //          LEPS DETECTORS
+    /////////////////////////////////////
+    
+    G4bool              LEPS_AllPresent_Override;
+    G4bool              LEPS_AllAbsent_Override;
+    G4bool              LEPS_Presence[numberOf_LEPS];
+    G4double            LEPS_Distance[numberOf_LEPS];
+    G4RotationMatrix    LEPS_rotm[numberOf_LEPS];
+    G4double            LEPS_phi[numberOf_LEPS];
+    G4double            LEPS_theta[numberOf_LEPS];
+    
+    G4Transform3D       LEPS_transform[numberOf_LEPS];
+    G4ThreeVector       LEPS_position[numberOf_LEPS];
+    
+    G4Transform3D       LEPS_InternalVacuum_transform[numberOf_LEPS];
+    G4ThreeVector       LEPS_InternalVacuum_position[numberOf_LEPS];
+    
+    G4Transform3D       LEPS_Window_transform[numberOf_LEPS];
+    G4ThreeVector       LEPS_Window_position[numberOf_LEPS];
+    
+    //      LEPS HPGe Crystals
+    G4VPhysicalVolume*  Physical_LEPS_HPGeCrystal;
+    G4LogicalVolume*    Logic_LEPS_HPGeCrystal[4];
+    
     
     
     //////////////////////////////////////
-    //          K600 SPECTROMETER
+    //          Magnetic Fields
     //////////////////////////////////////
     
     //////////////////////////////////////
-    //          K600 - QUADRUPOLE
+    //      AFRODITE - QUADRUPOLE
     G4bool              Ideal_Quadrupole;
     G4bool              Mapped_Quadrupole;
     G4bool              AFRODITE_Quadrupole;
