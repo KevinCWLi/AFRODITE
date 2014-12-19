@@ -66,13 +66,6 @@ const G4int         TIARA_TotalTimeSamples = 5; //
 const G4double      TIARA_TotalSampledTime = TIARA_SamplingTime * TIARA_TotalTimeSamples; // ns
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-///////////////     VDC Detectors       ///////////////////
-const G4int         hit_buffersize = 100;
-const G4double      VDC_SamplingTime = 10; // ns
-const G4int         VDC_TotalTimeSamples = 15; //
-const G4double      VDC_TotalSampledTime = VDC_SamplingTime * VDC_TotalTimeSamples; // ns
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 ///////////////     PlasticScint Detectors - Analogue Sampling    ///////////////////
 const G4double      PlasticScint_SamplingTime = 10; // ns
 const G4int         PlasticScint_TotalTimeSamples = 15; //
@@ -93,13 +86,6 @@ const G4double      CLOVER_Shield_BGO_SamplingTime = CLOVER_SamplingTime; // ns
 const G4int         CLOVER_Shield_BGO_TotalTimeSamples = CLOVER_TotalTimeSamples + CLOVER_ComptonSupression_TimeWindow; //
 const G4double      CLOVER_Shield_BGO_TotalSampledTime = CLOVER_Shield_BGO_SamplingTime * CLOVER_Shield_BGO_TotalTimeSamples; // ns
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-///////////////     VDC Signal Wires - Energy Threshold     ///////////////////
-const G4double      VDC1_U_WIRE_ThresholdEnergy = 10.;   // keV
-const G4double      VDC1_X_WIRE_ThresholdEnergy = 10.;   // keV
-
-const G4double      VDC2_U_WIRE_ThresholdEnergy = 10.;   // keV
-const G4double      VDC2_X_WIRE_ThresholdEnergy = 10.;   // keV
 
 ///////////////     TIARA - Energy Threshold     ///////////////////
 const G4double      TIARA_AA_ThresholdEnergy = .5;   // MeV
