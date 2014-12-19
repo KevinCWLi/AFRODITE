@@ -68,13 +68,7 @@ EventAction::~EventAction()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void EventAction::BeginOfEventAction(const G4Event* evt)
-{  
-  // initialisation per event
-  //fEnergyAbs = 0.;
-  //fEnergyGap = 0.;
-  //fTrackLAbs = 0.;
-  //fTrackLGap = 0.;
-    
+{
     evtNb = evt->GetEventID();
     
     GA_LineOfSight = true;
@@ -158,18 +152,18 @@ void EventAction::BeginOfEventAction(const G4Event* evt)
     
     for(G4int i=0; i<3; i++)
     {
-        for (G4int k=0; k<PADDLE_TotalTimeSamples; k++)
+        for (G4int k=0; k<PlasticScint_TotalTimeSamples; k++)
         {
-            PADDLE_Trig[i] = 0;
+            PlasticScint_Trig[i] = 0;
             
-            PADDLE_EDep[i][k] = 0;
-            PADDLE_TOF[i][k] = 0;
+            PlasticScint_EDep[i][k] = 0;
+            PlasticScint_TOF[i][k] = 0;
             
-            PADDLE_EWpositionX[i][k] = 0;
-            PADDLE_EWpositionY[i][k] = 0;
+            PlasticScint_EWpositionX[i][k] = 0;
+            PlasticScint_EWpositionY[i][k] = 0;
             
-            PADDLE_positionX[i][k] = 0;
-            PADDLE_positionY[i][k] = 0;
+            PlasticScint_positionX[i][k] = 0;
+            PlasticScint_positionY[i][k] = 0;
         }
     }
     
@@ -250,46 +244,46 @@ void EventAction::EndOfEventAction(const G4Event* event)
     
     ////////////////////////////////////////////////////////
     //
-    //          PADDLE DETECTORS - Plastic Scintillators
+    //      PlasticScint - NEUTRON WALL DETECTORS
     //
     ////////////////////////////////////////////////////////
     
-    GainPADDLE = 1.0;
-    OffsetPADDLE = 0.0;
+    GainPlasticScint = 1.0;
+    OffsetPlasticScint = 0.0;
 
     
     for(G4int i=0; i<3; i++)
     {
-        for (G4int k=0; k<PADDLE_TotalTimeSamples; k++)
+        for (G4int k=0; k<PlasticScint_TotalTimeSamples; k++)
         {
             ////              Calculating energy weighted positions
-            PADDLE_positionX[i][k] = G4RandGauss::shoot(PADDLE_EWpositionX[i][k]/PADDLE_EDep[i][k], 4.8);
-            PADDLE_positionY[i][k] = PADDLE_EWpositionY[i][k]/PADDLE_EDep[i][k];
+            PlasticScint_positionX[i][k] = G4RandGauss::shoot(PlasticScint_EWpositionX[i][k]/PlasticScint_EDep[i][k], 4.8);
+            PlasticScint_positionY[i][k] = PlasticScint_EWpositionY[i][k]/PlasticScint_EDep[i][k];
             
             ////              Calculating a Gaussian Smeared Energy Deposition
-            PADDLE_EDep[i][k] = G4RandGauss::shoot(PADDLE_EDep[i][k], 0.10*PADDLE_EDep[i][k]);
+            PlasticScint_EDep[i][k] = G4RandGauss::shoot(PlasticScint_EDep[i][k], 0.10*PlasticScint_EDep[i][k]);
             
-            if( PADDLE_EDep[i][k] >= G4RandGauss::shoot(PADDLE_ThresholdEnergy, 0.01*PADDLE_ThresholdEnergy))
+            if( PlasticScint_EDep[i][k] >= G4RandGauss::shoot(PlasticScint_ThresholdEnergy, 0.01*PlasticScint_ThresholdEnergy))
             {
-                ////////////////////////////////////////////////////////
-                //      PADDLE DETECTORS - 1D, Counts versus Energy
-                ////////////////////////////////////////////////////////
+                ////////////////////////////////////////////////////////////////////
+                //      PlasticScint DETECTORS - 1D, Counts versus Energy
+                ////////////////////////////////////////////////////////////////////
                 
-                analysisManager->FillH1(i+7, GainPADDLE*PADDLE_EDep[i][k] + OffsetPADDLE, 1);
+                analysisManager->FillH1(i+7, GainPlasticScint*PlasticScint_EDep[i][k] + OffsetPlasticScint, 1);
                 
-                PADDLE_TOF[i][k] = G4RandGauss::shoot(PADDLE_TOF[i][k], 0.05*PADDLE_TOF[i][k]);
+                PlasticScint_TOF[i][k] = G4RandGauss::shoot(PlasticScint_TOF[i][k], 0.05*PlasticScint_TOF[i][k]);
                 
                 
                 ////////////////////////////////////////////////////////////////////
-                //              PADDLE DETECTORS - 2D, Position versus Energy
+                //      PlasticScint DETECTORS - 2D, Position versus Energy
                 ////////////////////////////////////////////////////////////////////
-                analysisManager->FillH2(i+1, PADDLE_positionX[i][k], PADDLE_positionY[i][k], PADDLE_EDep[i][k]);
+                analysisManager->FillH2(i+1, PlasticScint_positionX[i][k], PlasticScint_positionY[i][k], PlasticScint_EDep[i][k]);
                 
                 ////////////////////////////////////////////////////////////////////
-                //              PADDLE DETECTORS - 2D, Energy versus T.O.F.
+                //      PlasticScint DETECTORS - 2D, Energy versus T.O.F.
                 ////////////////////////////////////////////////////////////////////
                 
-                analysisManager->FillH2(i+4, PADDLE_TOF[i][k], GainPADDLE*PADDLE_EDep[i][k] + OffsetPADDLE, 1);
+                analysisManager->FillH2(i+4, PlasticScint_TOF[i][k], GainPlasticScint*PlasticScint_EDep[i][k] + OffsetPlasticScint, 1);
                 
             }
         }
@@ -357,28 +351,6 @@ void EventAction::EndOfEventAction(const G4Event* event)
     
     
     
-    ////////////////////////////////////////////////////////
-    //
-    //                VDC, VERTICAL DRIFT CHAMBER
-    //
-    ////////////////////////////////////////////////////////
-    
-    ////    VDC 1
-    RayTrace(0, 0);     //RayTrace(VDCNo, XU_Wireplane)
-    RayTrace(0, 1);
-    CalcYFP(0);
-    //G4cout << "Here is the Xpos[0] (VDC1)     -->     "<< Xpos[0] << G4endl;
-    //G4cout << "Here is the ThetaFP[0] (VDC1)     -->     "<< ThetaFP[0] << G4endl;
-
-    ////    VDC 2
-    RayTrace(1, 0);     //RayTrace(VDCNo, XU_Wireplane)
-    RayTrace(1, 1);
-    CalcYFP(1);
-    //G4cout << "Here is the Xpos[1] (VDC2)     -->     "<< Xpos[1] << G4endl;
-    //G4cout << "Here is the ThetaFP[1] (VDC2)     -->     "<< ThetaFP[1] << G4endl;
-
-    
-    
     ////////////////////////////////////////////////////
     ////                                            ////
     ////                DataTreeSim                 ////
@@ -396,7 +368,6 @@ void EventAction::EndOfEventAction(const G4Event* event)
     analysisManager->FillNtupleDColumn(0, 7, ThetaSCAT[1]);
     
     analysisManager->AddNtupleRow(0);
-
     */
     
     
@@ -418,10 +389,6 @@ void EventAction::EndOfEventAction(const G4Event* event)
         
         analysisManager->AddNtupleRow(2);
 
-        //G4cout << "Here is the value of InputDist[0]:    -->     " << InputDist[0] << G4endl;
-        //G4cout << "Here is the value of InputDist[1]:    -->     " << InputDist[1] << G4endl;
-
-        
         
         ////////////////////////////////////////////////////////////
         ////    Creating Distribution txt file for Data Sorting
@@ -518,13 +485,6 @@ void EventAction::EndOfEventAction(const G4Event* event)
                 theta = acos(av_zPos/normVector)/deg;
                 solidAngle = (0.5)*(GA_TIARA_AA_stor[i][3]/GA_numberOfEvents_double);
                 
-                /*
-                G4cout << "" << G4endl;
-                G4cout << "Here is the GA_TIARA_AA_stor[3] value     -->     "<< GA_TIARA_AA_stor[i][3] << G4endl;
-                G4cout << "Here is the GA_numberOfEvents_double value     -->     "<< GA_numberOfEvents_double << G4endl;
-                G4cout << "Here is the solidAngle value     -->     "<< solidAngle << G4endl;
-                G4cout << "" << G4endl;
-                */
                 
                 if(av_xPos==0)
                 {
@@ -558,82 +518,6 @@ void EventAction::EndOfEventAction(const G4Event* event)
 
         }
     }
-    
-    
-
-    
-    
-    ///////////////////////////////////////////////////////
-    //          PRINTING the VDC Values
-    /*
-     for (G4int k=0; k<hit_buffersize; k++)
-     {
-     if(VDC_Observables[0][k]>=0 && VDC_Observables[1][k]>20)
-     {
-     G4cout << "                         " << G4endl;
-     G4cout << "Here is the k (index) value     -->     "<< k << G4endl;
-     G4cout << "Here is the VDC_Observables[0][k], Channel ID     -->     "<< VDC_Observables[0][k] << G4endl;
-     G4cout << "Here is the VDC_Observables[1][k], Edep     -->     "<< VDC_Observables[1][k] << G4endl;
-     G4cout << "Here is the VDC_Observables[2][k], EW_zpos     -->     "<< VDC_Observables[2][k] << G4endl;
-     G4cout << "Here is the VDC_Observables[3][k], EW_t     -->     "<< VDC_Observables[3][k] << G4endl;
-     G4cout << "Here is the VDC_Observables[2][k], zpos     -->     "<< VDC_Observables[2][k]/VDC_Observables[1][k] << G4endl;
-     G4cout << "Here is the VDC_Observables[3][k], t     -->     "<< VDC_Observables[3][k]/VDC_Observables[1][k] << G4endl;
-     }
-     }
-     */
-    
-    /*
-     for (G4int k=0; k<hit_buffersize; k++)
-     {
-     if(VDC_Observables[1][k]>20 && (VDC_Observables[0][k]>=0) && (VDC_Observables[0][k]<=142))
-     {
-     G4cout << "Here is the VDC_Observables[0][k] value     -->     "<< VDC_Observables[0][k] << G4endl;
-     
-     }
-     }
-     G4cout << "Here is the Upos[0] value     -->     "<< Upos[0] << G4endl;
-     */
-    
-    
-    
-    /*
-  // fill histograms
-  analysisManager->FillH1(1, fEnergyAbs);
-  analysisManager->FillH1(2, fEnergyGap);
-  analysisManager->FillH1(3, fTrackLAbs);
-  analysisManager->FillH1(4, fTrackLGap);
-  */
-    
-  // fill ntuple
-    /*
-  analysisManager->FillNtupleDColumn(0, fEnergyAbs);
-  analysisManager->FillNtupleDColumn(1, fEnergyGap);
-  analysisManager->FillNtupleDColumn(2, fTrackLAbs);
-  analysisManager->FillNtupleDColumn(3, fTrackLGap);
-  analysisManager->AddNtupleRow();  
-  */
-    
-    /*
-  // Print per event (modulo n)
-  //
-  G4int eventID = event->GetEventID();
-  G4int printModulo = G4RunManager::GetRunManager()->GetPrintProgress();
-  if ( ( printModulo > 0 ) && ( eventID % printModulo == 0 ) ) {
-    G4cout << "---> End of event: " << eventID << G4endl;     
-
-    G4cout
-       << "   Absorber: total energy: " << std::setw(7)
-                                        << G4BestUnit(fEnergyAbs,"Energy")
-       << "       total track length: " << std::setw(7)
-                                        << G4BestUnit(fTrackLAbs,"Length")
-       << G4endl
-       << "        Gap: total energy: " << std::setw(7)
-                                        << G4BestUnit(fEnergyGap,"Energy")
-       << "       total track length: " << std::setw(7)
-                                        << G4BestUnit(fTrackLGap,"Length")
-       << G4endl;
-  }
-    */
     
 }  
 

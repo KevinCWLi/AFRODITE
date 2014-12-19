@@ -150,149 +150,31 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         }
     }
     
-    ////////////////////////////////////////////////
-    //              VDC DETECTORS
-    ////////////////////////////////////////////////
     
-    if (interactiontime < VDC_TotalSampledTime)
+    ////////////////////////////////////////////
+    //          PlasticScint DETECTORS
+    ////////////////////////////////////////////
+    
+    if (interactiontime < PlasticScint_TotalSampledTime)
     {
-        if (volumeName == "VDC_SenseRegion_USDS")
-        {
-            WireChamberNo = volume->GetCopyNo();
-            
-            VDC_ITS = interactiontime/PADDLE_SamplingTime;
-            edepVDC = aStep->GetTotalEnergyDeposit()/keV;
-            
-            worldPosition = preStepPoint->GetPosition();
-            localPosition = theTouchable->GetHistory()->GetTopTransform().TransformPoint(worldPosition);
-            
-            
-            //  U WireChamber
-            if( (WireChamberNo==0) || (WireChamberNo==2) )
-            {
-                xPosL = localPosition.x()/mm;
-                yPosL = localPosition.y()/mm;
-                zPosL = localPosition.z()/mm + 4.0;
-                
-                if(abs(zPosL)>8) goto skip_CompletedVDCFilling;
-                
-                /*
-                if(yPosL<=(-131/2 -3.) || yPosL>=(131/2 -3.))
-                {
-                    G4cout << "Here is the yPosL in the U-Wireplane    -->     "<< yPosL << G4endl;
-                }
-                */
-
-                xOffset = -(1/tan(50))*yPosL;
-                
-                for(G4int i=0; i<143; i++)
-                {
-                    if( (xPosL > (-71.5+i)*abs(xShift) + xOffset) && (xPosL <= (-70.5+i)*abs(xShift) + xOffset) )
-                    {
-                        if(WireChamberNo==0) channelID = i;
-                        if(WireChamberNo==2) channelID = i + 341;
-                        
-                        for(G4int k=0; k<hit_buffersize; k++)
-                        {
-                            hit_StoredChannelNo = fEventAction->GetVDC_ObservablesChannelID(k);
-                            
-                            if( (hit_StoredChannelNo < 0) || (hit_StoredChannelNo == channelID) )
-                            {
-                                fEventAction->FillVDC_Observables(k, channelID, edepVDC, edepVDC*zPosL, edepVDC*interactiontime);
-                                
-                                goto skip_CompletedVDCFilling;
-                            }
-                        }
-                    }
-                }
-            }
-            
-            /*
-            hitNo = 1;
-            fEventAction->FillVDC_Observables(hitNo, 3, edepVDC, edepVDC*zPosL, edepVDC*interactiontime);
-            channelID = 3;
-            G4cout << "Here is the hitNo     -->     "<< hitNo << G4endl;
-            G4cout << "Here is the fEventAction->GetVDC_ObservablesTRIG(1)     -->     "<< fEventAction->GetVDC_ObservablesTRIG(1) << G4endl;
-            
-            if(fEventAction->GetVDC_ObservablesTRIG(1) == channelID)
-            {
-                G4cout << "SUCCESSFUL COMPARISON" << G4endl;
-            }
-            */
-            
-            //  X WireChamber
-            if( (WireChamberNo==1) || (WireChamberNo==3) )
-            {
-                xPosL = localPosition.x()/mm;
-                zPosL = localPosition.z()/mm - 4.0;
-                
-                if(abs(zPosL)>8) goto skip_CompletedVDCFilling;
-
-                for(G4int i=0; i<198; i++)
-                {
-                    if( (xPosL > (-99+i)*4) && (xPosL <= (-98+i)*4) )
-                    {
-                        if(WireChamberNo==1) channelID = i + 143;
-                        if(WireChamberNo==3) channelID = i + 484;
-                        //G4cout << "Here is the WireChamberNo     -->     "<< WireChamberNo << G4endl;
-                        //G4cout << "Here is the X WireChamber Triggered Cell     -->     "<< i << G4endl;
-                        //fEventAction->FillVDC_Observables(channelID, edepVDC, edepVDC*zPosL, edepVDC*interactiontime);
-                        
-                        
-                        for(G4int k=0; k<hit_buffersize; k++)
-                        {
-                            hit_StoredChannelNo = fEventAction->GetVDC_ObservablesChannelID(k);
-                            
-                            if( (hit_StoredChannelNo < 0) || (hit_StoredChannelNo == channelID) )
-                            {
-                                fEventAction->FillVDC_Observables(k, channelID, edepVDC, edepVDC*zPosL, edepVDC*interactiontime);
-                                
-                                goto skip_CompletedVDCFilling;
-                            }
-                        }
-                    }
-                }
-            }
-            
-            
-            
-            /*
-            fEventAction->AddEnergy_PADDLE( PADDLENo, PADDLE_ITS, edepPADDLE);
-            fEventAction->TagTOF_PADDLE(PADDLENo, PADDLE_ITS, interactiontime);
-            fEventAction->AddEWpositionX_PADDLE( PADDLENo, PADDLE_ITS, edepPADDLE*localPosition.x());
-            fEventAction->AddEWpositionY_PADDLE( PADDLENo, PADDLE_ITS, edepPADDLE*localPosition.y());
-             //if(fEventAction->Get_PADDLE_Trig(i) == false) fEventAction->Set_PADDLE_Trig(i, true);
-            */
-            
-        }
-    }
-
-    skip_CompletedVDCFilling:
-    
-    ////////////////////////////////////////////////
-    //              PADDLE DETECTORS
-    ////////////////////////////////////////////////
-    
-    if (interactiontime < PADDLE_TotalSampledTime)
-    {
-        if (volumeName == "PADDLE")
+        if (volumeName == "PlasticScint")
         {
             channelID = volume->GetCopyNo();
             
-            PADDLENo = channelID;
+            PlasticScintNo = channelID;
             
-            PADDLE_ITS = interactiontime/PADDLE_SamplingTime;
-            edepPADDLE = aStep->GetTotalEnergyDeposit()/MeV;
+            PlasticScint_ITS = interactiontime/PlasticScint_SamplingTime;
+            edepPlasticScint = aStep->GetTotalEnergyDeposit()/MeV;
             
             worldPosition = preStepPoint->GetPosition();
             localPosition = theTouchable->GetHistory()->GetTopTransform().TransformPoint(worldPosition);
             
-            fEventAction->AddEnergy_PADDLE( PADDLENo, PADDLE_ITS, edepPADDLE);
-            fEventAction->TagTOF_PADDLE(PADDLENo, PADDLE_ITS, interactiontime);
-            fEventAction->AddEWpositionX_PADDLE( PADDLENo, PADDLE_ITS, edepPADDLE*localPosition.x());
-            fEventAction->AddEWpositionY_PADDLE( PADDLENo, PADDLE_ITS, edepPADDLE*localPosition.y());
+            fEventAction->AddEnergy_PlasticScint( PlasticScintNo, PlasticScint_ITS, edepPlasticScint);
+            fEventAction->TagTOF_PlasticScint(PlasticScintNo, PlasticScint_ITS, interactiontime);
+            fEventAction->AddEWpositionX_PlasticScint( PlasticScintNo, PlasticScint_ITS, edepPlasticScint*localPosition.x());
+            fEventAction->AddEWpositionY_PlasticScint( PlasticScintNo, PlasticScint_ITS, edepPlasticScint*localPosition.y());
             
-            //if(fEventAction->Get_PADDLE_Trig(i) == false) fEventAction->Set_PADDLE_Trig(i, true);
+            //if(fEventAction->Get_PlasticScint_Trig(i) == false) fEventAction->Set_PlasticScint_Trig(i, true);
         }
     }
     
