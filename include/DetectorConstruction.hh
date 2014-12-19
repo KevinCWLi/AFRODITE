@@ -231,6 +231,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     //      LEPS HPGe Crystals
     G4VPhysicalVolume*  Physical_LEPS_HPGeCrystal;
     G4LogicalVolume*    Logic_LEPS_HPGeCrystal[4];
+    G4Transform3D       LEPS_HPGeCrystal_transform[4];
+    G4RotationMatrix    LEPS_HPGeCrystal_rotm[4];
     
     
     

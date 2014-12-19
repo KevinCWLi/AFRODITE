@@ -69,6 +69,9 @@ EventAction::~EventAction()
 
 void EventAction::BeginOfEventAction(const G4Event* evt)
 {
+    ////////////////////////////////////////////////////////////////////
+    ////    Flushing all the arrays and resetting the boolean tests
+    
     evtNb = evt->GetEventID();
     
     GA_LineOfSight = true;
@@ -108,8 +111,6 @@ void EventAction::BeginOfEventAction(const G4Event* evt)
     }
     
     
-    /////////////////////////////////////////////////////
-    
     for(G4int i=0; i<9; i++)
     {
         for (G4int k=0; k<CLOVER_TotalTimeSamples; k++)
@@ -133,6 +134,18 @@ void EventAction::BeginOfEventAction(const G4Event* evt)
         }
     }
     
+    for(G4int i=0; i<6; i++)
+    {
+        for(G4int j=0; j<4; j++)
+        {
+            for (G4int k=0; k<LEPS_TotalTimeSamples; k++)
+            {
+                LEPS_HPGeCrystal_EDep[i][j][k] = 0;
+            }
+        }
+    }
+    
+    
     for(G4int i=0; i<5; i++)
     {
         for(G4int k = 0; k<TIARA_TotalTimeSamples; k++)
@@ -150,7 +163,7 @@ void EventAction::BeginOfEventAction(const G4Event* evt)
         }
     }
     
-    for(G4int i=0; i<3; i++)
+    for(G4int i=0; i<12; i++)
     {
         for (G4int k=0; k<PlasticScint_TotalTimeSamples; k++)
         {
@@ -167,14 +180,6 @@ void EventAction::BeginOfEventAction(const G4Event* evt)
         }
     }
     
-    for(G4int j=0; j<4; j++)
-    {
-        for (G4int k=0; k<hit_buffersize; k++)
-        {
-            if(j==0) VDC_Observables[j][k] = -1;
-            else{VDC_Observables[j][k] = 0;}
-        }
-    }
     
     ////    Input Variables
     InputDist[0] = 0;
@@ -202,9 +207,6 @@ void EventAction::EndOfEventAction(const G4Event* event)
     
     for(G4int i=0; i<5; i++)
     {
-        shift_phi = (double)(i)*(10./8.)*(53.79-0.29);
-        //shift_phi = (double)(i)*72.;
-        
         for(G4int k = 0; k<TIARA_TotalTimeSamples; k++)
         {
             for(G4int j=0; j<16; j++)
@@ -252,7 +254,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
     OffsetPlasticScint = 0.0;
 
     
-    for(G4int i=0; i<3; i++)
+    for(G4int i=0; i<12; i++)
     {
         for (G4int k=0; k<PlasticScint_TotalTimeSamples; k++)
         {

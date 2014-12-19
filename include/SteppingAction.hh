@@ -69,16 +69,9 @@ private:
     G4ThreeVector localPosition;
     
     
-    ////    PlasticScint DETECTOR - Plastic Scintillator
+    ////    PlasticScint Detector
     G4double    edepPlasticScint;
-    G4int       PlasticScint_ITS;  // Interaction Time Sample for the Neutron Wall Plastic Scintillators
     G4int       PlasticScintNo;
-    
-    ////    VDC DETECTOR - Plastic Scintillator
-    G4double    edepVDC;
-    G4int       VDC_ITS;  // Interaction Time Sample for the Neutron Wall Plastic Scintillators
-    G4int       WireChamberNo;
-    G4int       hit_StoredChannelNo;
 
     //  Local Position
     G4double    xPosL;
@@ -95,22 +88,27 @@ private:
     
     ////    TIARA DETECTOR
     G4double    edepTIARA_AA;
-    G4int       TIARA_AA_ITS;             // Interaction Time Sample for the TIARA Detectors
     G4int       TIARANo;
     G4int       TIARA_RowNo;
     G4int       TIARA_SectorNo;
     
     ////    CLOVER DETECTOR
     G4double    edepCLOVER_HPGeCrystal;
-    G4int       CLOVER_HPGeCrystal_ITS;   // Interaction Time Sample for the CLOVER Detectors
     G4int       CLOVERNo;
     G4int       CLOVER_HPGeCrystalNo;
     
     ////    CLOVER BGO-Crystal, Compton Supression Shield
     G4double    edepCLOVER_BGOCrystal;
-    G4int       CLOVER_BGO_ITS; // Interaction Time Sample for the BGO Crystals within the CLOVER Shield
+    G4int       CLOVER_BGOCrystalNo;
+
+    ////    CLOVER BGO-Crystal, Compton Supression Shield
+    G4double    edepLEPS_HPGeCrystal;
+    G4int       LEPSNo;
+    G4int       LEPS_HPGeCrystalNo;
     
+    ////////////////////////////////////////////
     G4double    interactiontime;
+    G4int       iTS; // Interaction Time Sample
     G4int       channelID;
     G4String    volumeName;
     
