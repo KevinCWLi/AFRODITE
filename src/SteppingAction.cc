@@ -217,7 +217,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         ////    The purpose of this attenuation parameterisation is to mimic the overall response of the BGO shield through the coupling of PMT's. Forms of this parameterisation need to be further investigated (possibly through a full scintillation simulation). The maximum distance is approximately 240 mm.
         edepAttenuationParameter = (localPosition.z()/mm - 42.)/240.;
         edepCLOVER_BGOCrystal = edepCLOVER_BGOCrystal - (edepAttenuationParameter*edepCLOVER_BGOCrystal)*keV;
-        
+
         fEventAction->AddEnergyBGODetectors(CLOVERNo, CLOVER_BGOCrystalNo, iTS, edepCLOVER_BGOCrystal);
         //G4cout << "Here is the edepCLOVER_BGOCrystal    "<< edepBGO << G4endl;
     }

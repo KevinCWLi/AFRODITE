@@ -15,7 +15,7 @@ The current implemented detectors include the following:
 - The BGO shield complimenting the Clover HPGe detectors (Eurogam type), manufactured by Eurisys.
 - LEPS HPGe detectors, manufactured by Eurisys.
 - A neutron wall, composed of a total of 12 plastic scintillators (NE102).
-
+- The "new" scattering chamber built for AFRODITE
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
