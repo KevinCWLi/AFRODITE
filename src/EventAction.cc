@@ -53,11 +53,20 @@ using namespace std;
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 EventAction::EventAction()
- : G4UserEventAction(),
-   fEnergyAbs(0.),
-   fEnergyGap(0.),
-   fTrackLAbs(0.),
-   fTrackLGap(0.)
+: G4UserEventAction(),
+fEnergyAbs(0.0),
+fEnergyGap(0.0),
+fTrackLAbs(0.0),
+fTrackLGap(0.0),
+// Added the following constructor declarations to fix compile errors
+GainTIARA(1.0),
+OffsetTIARA(0.0),
+GainCLOVER(1.0),
+OffsetCLOVER(0.0),
+GainPlasticScint(1.0),
+OffsetPlasticScint(0.0),
+GainLEPS(1.0),
+OffsetLEPS(0.0)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -184,7 +193,7 @@ void EventAction::BeginOfEventAction(const G4Event* evt)
     ////    Input Variables
     InputDist[0] = 0;
     InputDist[1] = 0;
-
+    
     
 }
 
@@ -192,19 +201,19 @@ void EventAction::BeginOfEventAction(const G4Event* evt)
 
 void EventAction::EndOfEventAction(const G4Event* event)
 {
-  // Accumulate statistics
-  //
-
-  // get analysis manager
-  G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
-
+    // Accumulate statistics
+    //
+    
+    // get analysis manager
+    G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+    
     
     ////////////////////////////////////////////////////////
     //
     //                TIARA DETECTOR ARRAY
     //
     ////////////////////////////////////////////////////////
-    
+    /*
     for(G4int i=0; i<5; i++)
     {
         for(G4int k = 0; k<TIARA_TotalTimeSamples; k++)
@@ -215,7 +224,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
                 {
                     ////    Processing the Energies of the TIARA Detectors
                     TIARA_AA[i][j][l][0][k] = G4RandGauss::shoot(TIARA_AA[i][j][l][0][k], 0.7);
-
+                    
                     if(TIARA_AA[i][j][l][0][k] >= G4RandGauss::shoot(TIARA_AA_ThresholdEnergy, 0.5))
                     {
                         ////      Counts versus Energy for each TIARA
@@ -229,20 +238,20 @@ void EventAction::EndOfEventAction(const G4Event* event)
                         //analysisManager->FillNtupleIColumn(0, 0, i);
                         //analysisManager->FillNtupleIColumn(0, 1, j);
                         //analysisManager->FillNtupleIColumn(0, 2, k);
-                        /*
+                        
                         //      Energy
-                        analysisManager->FillNtupleDColumn(0, 12, TIARA_AA[i][j][l][0][k]);
+                        //analysisManager->FillNtupleDColumn(0, 12, TIARA_AA[i][j][l][0][k]);
                         //      Theta
-                        analysisManager->FillNtupleDColumn(0, 13, TIARA_AA[i][j][l][1][k]);
+                        //analysisManager->FillNtupleDColumn(0, 13, TIARA_AA[i][j][l][1][k]);
                         //      Phi
-                        analysisManager->FillNtupleDColumn(0, 14, TIARA_AA[i][j][l][2][k]);
-                         */
+                        //analysisManager->FillNtupleDColumn(0, 14, TIARA_AA[i][j][l][2][k]);
+                         
                     }
                 }
             }
         }
     }
-
+    */
     
     ////////////////////////////////////////////////////////
     //
@@ -266,7 +275,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
                 ////////////////////////////////////////////////////////////////////
                 //      PlasticScint DETECTORS - 1D, Counts versus Energy
                 ////////////////////////////////////////////////////////////////////
-                                
+                
                 PlasticScint_TOF[i][k] = G4RandGauss::shoot(PlasticScint_TOF[i][k], 0.05*PlasticScint_TOF[i][k]);
                 
             }
@@ -307,7 +316,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
                         }
                         if (CLOVER_HPGeCrystal_EDepVETO[i][j][k]) CLOVER_HPGeCrystal_EDep[i][j][k] = 0;
                     }
-
+                    
                     //      ADDBACK
                     if(Activate_CLOVER_ADDBACK)
                     {
@@ -361,11 +370,11 @@ void EventAction::EndOfEventAction(const G4Event* event)
                         LEPS_EDep[i][k] += LEPS_HPGeCrystal_EDep[i][j][k];
                     }
                     /*
-                    else if(CLOVER_HPGeCrystal_EDep[i][j][k] != 0)
-                    {
-
-                    }
-                    */
+                     else if(CLOVER_HPGeCrystal_EDep[i][j][k] != 0)
+                     {
+                     
+                     }
+                     */
                 }
             }
             
@@ -375,7 +384,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
             }
         }
     }
-
+    
     
     
     ////////////////////////////////////////////////////
@@ -384,11 +393,11 @@ void EventAction::EndOfEventAction(const G4Event* event)
     ////                                            ////
     ////////////////////////////////////////////////////
     /*
-    analysisManager->AddNtupleRow(0);
-    */
+     analysisManager->AddNtupleRow(0);
+     */
     
     
-
+    
     
     ////////////////////////////////////////////////////////////////
     ////                                                        ////
@@ -405,7 +414,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
         analysisManager->FillNtupleDColumn(2, 1, InputDist[1]);
         
         analysisManager->AddNtupleRow(2);
-
+        
         
         ////////////////////////////////////////////////////////////
         ////    Creating Distribution txt file for Data Sorting
@@ -532,10 +541,10 @@ void EventAction::EndOfEventAction(const G4Event* event)
             file1.close();
             file2.close();
             
-
+            
         }
     }
     
-}  
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

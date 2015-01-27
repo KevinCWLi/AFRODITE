@@ -23,16 +23,10 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-//      ----------------------------------------------------------------
-//                          AFRODITE (iThemba Labs)
-//      ----------------------------------------------------------------
+// $Id: Analysis.hh 68058 2013-03-13 14:47:43Z gcosmo $
 //
-//      Github repository: https://www.github.com/KevinCWLi/AFRODITE
-//
-//      Main Author:    K.C.W. Li
-//
-//      email: likevincw@gmail.com
-//
+/// \file Analysis.hh
+/// \brief Selection of the analysis technology
 
 #ifndef Analysis_h
 #define Analysis_h 1

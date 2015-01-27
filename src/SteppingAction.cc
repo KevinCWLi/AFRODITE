@@ -45,11 +45,11 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 SteppingAction::SteppingAction(
-                      const DetectorConstruction* detectorConstruction,
-                      EventAction* eventAction)
-  : G4UserSteppingAction(),
-    fDetConstruction(detectorConstruction),
-    fEventAction(eventAction)
+                               const DetectorConstruction* detectorConstruction,
+                               EventAction* eventAction)
+: G4UserSteppingAction(),
+fDetConstruction(detectorConstruction),
+fEventAction(eventAction)
 {
     
 }
@@ -57,7 +57,7 @@ SteppingAction::SteppingAction(
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 SteppingAction::~SteppingAction()
-{ 
+{
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -82,8 +82,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     
     // get volume name of the current step
     volumeName = volume->GetName();
-
-
+    
+    
     //G4cout << "Here is the particleName    "<< particleName << G4endl;
     //G4cout << "Here is the lifetime    "<< lifetime << G4endl;
     //G4cout << "Here is the interactiontime    "<< interactiontime << G4endl;
@@ -91,7 +91,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     //G4cout << "Here is the interactiontime    "<< interactiontime << G4endl;
     //G4cout << "                                "<< G4endl;
     
-
+    
     //G4ParticleDefinition* particleOI = G4Gamma::Gamma();
     
     
@@ -102,7 +102,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     if((interactiontime < TIARA_TotalSampledTime) && (volumeName == "TIARA_AA_RS"))
     {
         edepTIARA_AA = aStep->GetTotalEnergyDeposit()/MeV;
-
+        
         if(edepTIARA_AA != 0)
         {
             channelID = volume->GetCopyNo();
@@ -110,7 +110,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             TIARANo = channelID/128;
             TIARA_RowNo = (channelID - (TIARANo*128))/8;
             TIARA_SectorNo = (channelID - (TIARANo*128))%8;
-
+            
             iTS = interactiontime/TIARA_SamplingTime;
             edepTIARA_AA = aStep->GetTotalEnergyDeposit()/MeV;
             
@@ -143,7 +143,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 
                 fEventAction->SetVar_TIARA_AA(TIARANo, TIARA_RowNo, TIARA_SectorNo, 1, iTS, theta);
                 fEventAction->SetVar_TIARA_AA(TIARANo, TIARA_RowNo, TIARA_SectorNo, 2, iTS, phi);
-
+                
             }
             
             fEventAction->FillVar_TIARA_AA(TIARANo, TIARA_RowNo, TIARA_SectorNo, 0, iTS, edepTIARA_AA);
@@ -205,7 +205,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     if(Activate_CLOVER_ComptonSupression && (interactiontime < CLOVER_Shield_BGO_TotalSampledTime) && (volumeName == "CLOVER_Shield_BGOCrystal"))
     {
         channelID = volume->GetCopyNo();
-
+        
         CLOVERNo = channelID/16;
         CLOVER_BGOCrystalNo = channelID%16;
         
@@ -217,7 +217,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         ////    The purpose of this attenuation parameterisation is to mimic the overall response of the BGO shield through the coupling of PMT's. Forms of this parameterisation need to be further investigated (possibly through a full scintillation simulation). The maximum distance is approximately 240 mm.
         edepAttenuationParameter = (localPosition.z()/mm - 42.)/240.;
         edepCLOVER_BGOCrystal = edepCLOVER_BGOCrystal - (edepAttenuationParameter*edepCLOVER_BGOCrystal)*keV;
-
+        
         fEventAction->AddEnergyBGODetectors(CLOVERNo, CLOVER_BGOCrystalNo, iTS, edepCLOVER_BGOCrystal);
         //G4cout << "Here is the edepCLOVER_BGOCrystal    "<< edepBGO << G4endl;
     }
@@ -234,7 +234,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         
         LEPSNo = channelID/4;
         LEPS_HPGeCrystalNo = channelID%4;
-
+        
         iTS = interactiontime/LEPS_SamplingTime;
         edepLEPS_HPGeCrystal = aStep->GetTotalEnergyDeposit()/keV;
         
@@ -256,7 +256,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         {
             channelID = volume->GetCopyNo();
             worldPosition = preStepPoint->GetPosition();
- 
+            
             xPosW = worldPosition.x()/m;
             yPosW = worldPosition.y()/m;
             zPosW = worldPosition.z()/m;
@@ -304,10 +304,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 fEventAction->SetInputDist(0, theta);
                 fEventAction->SetInputDist(1, phi);
             }
-
+            
         }
     }
-
+    
     
     ////    Here, one declares the volumes that one considers will block the particles of interest and effectively mask the relevant volume of interest.
     if (GA_LineOfSightMODE && (volumeName == "TIARA_AA_RS" || volumeName=="TIARA_PCB" || volumeName=="TIARA_SiliconWafer"))
@@ -317,7 +317,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     
     
     
-   
+    
     
 }
 

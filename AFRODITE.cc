@@ -33,6 +33,8 @@
 //
 //      email: likevincw@gmail.com
 //
+//      Main program of the AFRODITE code (PR239A branch)
+//
 
 #include "DetectorConstruction.hh"
 #include "ActionInitialization.hh"
@@ -103,8 +105,6 @@ int main(int argc,char** argv)
         }
     }
     
-
-    
     // Choose the Random engine
     //
     //G4Random::setTheEngine(new CLHEP::RanecuEngine);
@@ -135,9 +135,9 @@ int main(int argc,char** argv)
     runManager->SetUserInitialization(detConstruction);
     
     /*
-    G4VModularPhysicsList* physicsList = new QGSP_BERT;
-    runManager->SetUserInitialization(physicsList);
-    */
+     G4VModularPhysicsList* physicsList = new QGSP_BERT;
+     runManager->SetUserInitialization(physicsList);
+     */
     
     ////////////////////////////////////////////////////////////////////
     //      Initialising the Physics List with Radioactive Decay

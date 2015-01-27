@@ -119,10 +119,10 @@ const G4int         Particles_per_Bunch = 100;  // Particles per Bunch
 
 class EventAction : public G4UserEventAction
 {
-  public:
+public:
     EventAction();
     virtual ~EventAction();
-
+    
     virtual void  BeginOfEventAction(const G4Event* event);
     virtual void    EndOfEventAction(const G4Event* event);
     
@@ -130,12 +130,15 @@ class EventAction : public G4UserEventAction
     void AddGap(G4double de, G4double dl);
     
     G4int       evtNb;
-
+    
     
     /////////////////////
     //      TIARA
-    G4double GainTIARA = 1.0;
-    G4double OffsetTIARA = 0.0;
+    G4double GainTIARA;
+    G4double OffsetTIARA;
+    // Previous versions, moved declaration to EventAction.cc constructor
+    //G4double GainTIARA = 1.0;
+    //G4double OffsetTIARA = 0.0;
     
     G4double    TIARA_AA[5][16][8][3][TIARA_TotalTimeSamples];
     //  First index designates the TIARANo
@@ -150,15 +153,18 @@ class EventAction : public G4UserEventAction
     
     void SetVar_TIARA_AA(G4int i, G4int j, G4int l, G4int m, G4int k, G4double a)
     {TIARA_AA[i][j][l][m][k] = a;};
-
+    
     G4double GetVar_TIARA_AA(G4int i, G4int j, G4int l, G4int m, G4int k)
     {return TIARA_AA[i][j][l][m][k];};
-
+    
     
     ////////////////////////
     //      CLOVERS
-    G4double GainCLOVER = 1.0;
-    G4double OffsetCLOVER = 0.0;
+    G4double GainCLOVER;
+    G4double OffsetCLOVER;
+    // Previous versions, moved declaration to EventAction.cc constructor
+    //G4double GainCLOVER = 1.0;
+    //G4double OffsetCLOVER = 0.0;
     
     G4double    CLOVER_HPGeCrystal_EDep[9][4][CLOVER_TotalTimeSamples];
     G4bool      CLOVER_HPGeCrystal_EDepVETO[9][4][CLOVER_TotalTimeSamples];
@@ -176,8 +182,11 @@ class EventAction : public G4UserEventAction
     
     /////////////////////////////////////////
     //      PlasticScint DETECTORS
-    G4double    GainPlasticScint = 1.0;
-    G4double    OffsetPlasticScint = 0.0;
+    G4double    GainPlasticScint;
+    G4double    OffsetPlasticScint;
+    // Previous versions, moved declaration to EventAction.cc constructor
+    //G4double    GainPlasticScint = 1.0;
+    //G4double    OffsetPlasticScint = 0.0;
     
     G4double    PlasticScint_EDep[3][PlasticScint_TotalTimeSamples];
     G4double    PlasticScint_TOF[3][PlasticScint_TotalTimeSamples];
@@ -200,15 +209,18 @@ class EventAction : public G4UserEventAction
     
     ////////////////////////
     //      LEPS
-    G4double GainLEPS = 1.0;
-    G4double OffsetLEPS = 0.0;
+    G4double GainLEPS;
+    G4double OffsetLEPS;
+    // Previous versions, moved declaration to EventAction.cc constructor
+    //G4double GainLEPS = 1.0;
+    //G4double OffsetLEPS = 0.0;
     
     G4double    LEPS_HPGeCrystal_EDep[6][4][LEPS_TotalTimeSamples];
     G4double    LEPS_EDep[6][LEPS_TotalTimeSamples];
     
     void AddEnergyLEPS_HPGeCrystals(G4int i, G4int j, G4int k, G4double a)	{LEPS_HPGeCrystal_EDep[i][j][k] += a; };
-
-
+    
+    
     
     
     /////////////////////////////////
@@ -232,7 +244,7 @@ class EventAction : public G4UserEventAction
     std::ofstream fileV_MMM;
     char filenameV[512];
     G4String fileNameHolder;
-
+    
     
     ////    Angular Distribution for Data Sorting
     G4int       GA_MMM_AngDist_counter[5][16][8];
@@ -242,7 +254,7 @@ class EventAction : public G4UserEventAction
     //  Second index:
     //  Indices 0, 1 and 2 designates summed x, y and z positions respectively whilst an index of 3 designates the number of valid hits
     void FillGA_TIARAstor(G4int i, G4int j, G4double a)	{GA_TIARA_AA_stor[i][j] += a;};
-
+    
     G4double    GA_TIARA_AA[640][3];
     //  First index designates channel
     //  Second index:
@@ -251,36 +263,36 @@ class EventAction : public G4UserEventAction
     //  An index of 2, designates whether the volume of interest has been hit or not: 0=>!hit, 1=>hit
     void SetGA_TIARA(G4int i, G4int j, G4double a)	{GA_TIARA_AA[i][j] = a;};
     double GetGA_TIARA(G4int i, G4int j)	{return GA_TIARA_AA[i][j];};
-
     
-
-  private:
+    
+    
+private:
     G4double  fEnergyAbs;
     G4double  fEnergyGap;
-    G4double  fTrackLAbs; 
+    G4double  fTrackLAbs;
     G4double  fTrackLGap;
     
     
     
-
+    
     
 };
 
 /*
-inline void EventAction::AddAbs(G4double de, G4double dl) {
-  fEnergyAbs += de; 
-  fTrackLAbs += dl;
-}
-
-inline void EventAction::AddGap(G4double de, G4double dl) {
-  fEnergyGap += de; 
-  fTrackLGap += dl;
-}
-*/
+ inline void EventAction::AddAbs(G4double de, G4double dl) {
+ fEnergyAbs += de;
+ fTrackLAbs += dl;
+ }
+ 
+ inline void EventAction::AddGap(G4double de, G4double dl) {
+ fEnergyGap += de;
+ fTrackLGap += dl;
+ }
+ */
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
 
-    
+

@@ -46,17 +46,17 @@ class DetectorConstruction;
 
 class ActionInitialization : public G4VUserActionInitialization
 {
-  public:
+public:
     ActionInitialization(DetectorConstruction*);
     virtual ~ActionInitialization();
-
+    
     virtual void BuildForMaster() const;
     virtual void Build() const;
-
-  private:
+    
+private:
     DetectorConstruction* fDetConstruction;
 };
 
 #endif
 
-    
+

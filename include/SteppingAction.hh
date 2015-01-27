@@ -46,22 +46,22 @@ class EventAction;
 
 /// Stepping action class.
 ///
-/// In UserSteppingAction() there are collected the energy deposit and track 
+/// In UserSteppingAction() there are collected the energy deposit and track
 /// lengths of charged particles in Absober and Gap layers and
 /// updated in EventAction.
 
 class SteppingAction : public G4UserSteppingAction
 {
 public:
-  SteppingAction(const DetectorConstruction* detectorConstruction,
-                    EventAction* eventAction);
-  virtual ~SteppingAction();
-
-  virtual void UserSteppingAction(const G4Step* step);
+    SteppingAction(const DetectorConstruction* detectorConstruction,
+                   EventAction* eventAction);
+    virtual ~SteppingAction();
+    
+    virtual void UserSteppingAction(const G4Step* step);
     
 private:
-  const DetectorConstruction* fDetConstruction;
-  EventAction*  fEventAction;
+    const DetectorConstruction* fDetConstruction;
+    EventAction*  fEventAction;
     
     G4double    fCharge;
     G4double    fMass;
@@ -72,7 +72,7 @@ private:
     ////    PlasticScint Detector
     G4double    edepPlasticScint;
     G4int       PlasticScintNo;
-
+    
     //  Local Position
     G4double    xPosL;
     G4double    yPosL;
@@ -83,7 +83,9 @@ private:
     G4double    yPosW;
     G4double    zPosW;
     
-    G4double    xShift = 4*(cos(40) + tan(40)*cos(50));
+    G4double    xShift;
+    // Previous versions, leaving xShift undeclared, does not seem to be used
+    //G4double    xShift = 4*(cos(40) + tan(40)*cos(50));
     G4double    xOffset;
     
     ////    TIARA DETECTOR
@@ -101,7 +103,7 @@ private:
     G4double    edepCLOVER_BGOCrystal;
     G4int       CLOVER_BGOCrystalNo;
     G4double    edepAttenuationParameter;
-
+    
     ////    CLOVER BGO-Crystal, Compton Supression Shield
     G4double    edepLEPS_HPGeCrystal;
     G4int       LEPSNo;

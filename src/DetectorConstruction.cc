@@ -109,7 +109,7 @@ G4ThreadLocal G4FieldManager* DetectorConstruction::fieldManagerMagneticField_AF
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 DetectorConstruction::DetectorConstruction()
- : G4VUserDetectorConstruction(),
+: G4VUserDetectorConstruction(),
 fAbsorberPV(0), fGapPV(0), fCheckOverlaps(false), PhysiCLOVER_HPGeCrystal(0), PhysiCLOVER_Shield_BGOCrystal(0), PhysiCLOVER_Shield_PMT(0), PhysiPlasticScint(0), PhysiHAGAR_NaICrystal(0), PhysiHAGAR_Annulus(0), PhysiHAGAR_FrontDisc(0), PhysiAFRODITE_Dipole1(0), PhysiAFRODITE_Quadrupole(0)
 {
     WorldSize = 15.*m;
@@ -118,7 +118,7 @@ fAbsorberPV(0), fGapPV(0), fCheckOverlaps(false), PhysiCLOVER_HPGeCrystal(0), Ph
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 DetectorConstruction::~DetectorConstruction()
-{ 
+{
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -135,8 +135,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     ////////////////////////////
     ////    CLOVER SETUP
     
-    CLOVER_AllPresent_Override = false;
-    CLOVER_AllAbsent_Override = true;
+    CLOVER_AllPresent_Override = true;
+    CLOVER_AllAbsent_Override = false;
     
     CLOVER_Shield_AllPresent_Override = false;
     CLOVER_Shield_AllAbsent_Override = true;
@@ -352,13 +352,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         if(PlasticScint_AllAbsent_Override) PlasticScint_Presence[i] = false;
         if(PlasticScint_AllPresent_Override && PlasticScint_AllAbsent_Override) PlasticScint_Presence[i] = false;
     }
-
+    
     
     ////////////////////////////////
     ////        LEPS SETUP
     
-    LEPS_AllPresent_Override = true;
-    LEPS_AllAbsent_Override = false;
+    LEPS_AllPresent_Override = false;
+    LEPS_AllAbsent_Override = true;
     
     
     //  LEPS 1
@@ -412,7 +412,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         if( LEPS_AllAbsent_Override == true ) LEPS_Presence[i] = false;
         if( LEPS_AllPresent_Override == true && LEPS_AllAbsent_Override == true ) LEPS_Presence[i] = false;
     }
-
+    
     
     
     ////////////////////////////
@@ -432,7 +432,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     HAGAR_FrontDisc_CentrePosition = HAGAR_Annulus_CentrePosition + G4ThreeVector((61./2 +8/2)*cm, 0.*cm, 0.*cm);
     
     
-
+    
     ////////////////////////////////////////////////////
     ////                                            ////
     ////            AFRODITE VAULT SETUP            ////
@@ -480,11 +480,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     AFRODITE_Target_Presence = true;
     
     
-  // Define materials 
-  DefineMaterials();
-  
-  // Define volumes
-  return DefineVolumes();
+    // Define materials
+    DefineMaterials();
+    
+    // Define volumes
+    return DefineVolumes();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -508,7 +508,7 @@ void DetectorConstruction::DefineMaterials()
     nistManager->FindOrBuildMaterial("G4_CARBON_DIOXIDE");
     nistManager->FindOrBuildMaterial("G4_SODIUM_IODIDE");
     nistManager->FindOrBuildMaterial("G4_LITHIUM_CARBONATE");
-
+    
     //  NIST Elementary Material Database - ELEMENTS
     nistManager->FindOrBuildElement("H");
     nistManager->FindOrBuildElement("C");
@@ -521,14 +521,14 @@ void DetectorConstruction::DefineMaterials()
     nistManager->FindOrBuildElement("Pb");
     nistManager->FindOrBuildElement("W");
     nistManager->FindOrBuildElement("Li");
-
-
+    
+    
     // Vacuum
     //new G4Material("Galactic", z=1., a=1.01*g/mole,density= universe_mean_density,kStateGas, 2.73*kelvin, 3.e-18*pascal);
     
     
     // Print materials
-  G4cout << *(G4Material::GetMaterialTable()) << G4endl;
+    G4cout << *(G4Material::GetMaterialTable()) << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -550,7 +550,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
     G4Element* Lead = G4Element::GetElement("Pb");
     G4Element* Tungsten = G4Element::GetElement("W");
     G4Element* Lithium = G4Element::GetElement("Li");
-
+    
     
     //////////////////////////////////////
     //          Get Materials           //
@@ -563,7 +563,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
     G4Material* G4_W_Material = G4Material::GetMaterial("G4_W");
     G4Material* G4_Ar_Material = G4Material::GetMaterial("G4_Ar");
     G4Material* G4_Be_Material = G4Material::GetMaterial("G4_Be");
-
+    
     ////    NIST Defined Materials and Compounds
     G4Material* G4_Galactic_Material = G4Material::GetMaterial("G4_Galactic");
     G4Material* G4_AIR_Material = G4Material::GetMaterial("G4_AIR");
@@ -573,7 +573,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
     G4Material* G4_CARBON_DIOXIDE_Material = G4Material::GetMaterial("G4_CARBON_DIOXIDE");
     G4Material* G4_SODIUM_IODIDE_Material = G4Material::GetMaterial("G4_SODIUM_IODIDE");
     G4Material* G4_LITHIUM_CARBONATE_Material = G4Material::GetMaterial("G4_LITHIUM_CARBONATE");
-
+    
     ////    CLOVER Detector Shield, HEAVIMET Material
     G4Material* Heavimet_Material = new G4Material("Heavimet_Material",19.25*g/cm3, 5);
     Heavimet_Material->AddElement( Tungsten, 94.20*perCent);
@@ -614,7 +614,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                                    0,                        //its mother  volume
                                    false,                    //no boolean operation
                                    0);                       //copy number
-
+    
     
     
     //////////////////////////////////////////////////////////
@@ -670,7 +670,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         AFRODITE_MathisTC_VisAtt->SetForceSolid(true);
         LogicMathisTC->SetVisAttributes(AFRODITE_MathisTC_VisAtt);
     }
-
+    
     
     //////////////////////////////////////////////////////////
     //                      TARGET
@@ -694,7 +694,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                           fCheckOverlaps); // checking overlaps
     }
     
-
+    
     
     
     /////////////////////////////////////////////
@@ -787,8 +787,8 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         G4VSolid * Solid_CLOVER_Shield_Body = mesh_CLOVER_Shield_Body->TessellatedMesh();
         
         Logic_CLOVER_Shield_Body = new G4LogicalVolume(Solid_CLOVER_Shield_Body, G4_Al_Material, "LogicCLOVERShieldBody", 0, 0, 0);
-
-
+        
+        
         ///////////////////////////////////////////////////////
         //              CLOVER Shield Heavimet - CADMesh
         ///////////////////////////////////////////////////////
@@ -798,7 +798,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         G4VSolid * Solid_CLOVER_Shield_Heavimet = mesh_CLOVER_Shield_Heavimet->TessellatedMesh();
         
         Logic_CLOVER_Shield_Heavimet = new G4LogicalVolume(Solid_CLOVER_Shield_Heavimet, Heavimet_Material, "LogicCLOVERShieldHeavimet", 0, 0, 0);
-
+        
         
         
         ///////////////////////////////////////////////////////
@@ -808,7 +808,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         G4Box* Solid_BGOCrystal_template = new G4Box("BGOCrystal_template", (200./2)*mm, (200./2)*mm, (600./2)*mm);
         G4Box* Solid_BGOCrystal_razor = new G4Box("BGOCrystal_razor", (500./2)*mm, (500./2)*mm, (500./2)*mm);
         G4Tubs* Solid_BGOCrystal_PMTrazor = new G4Tubs("BGOCrystal_PMTrazor", 0.*mm, 500.*mm, 57.*mm, 0.*deg, 360.*deg);
-
+        
         G4VSolid* Solid_BGOCrystal_shear[16][7];
         G4ThreeVector   position_BGOCrystal_razor[16][7];
         G4RotationMatrix* rm_BGOCrystal_razor[16][7];
@@ -820,7 +820,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                 rm_BGOCrystal_razor[i][j] = new G4RotationMatrix();
             }
         }
-
+        
         ////    The components of the positions used by the razor to shear each BGOCrystal shape
         ////    There are two "unique crystals" (up to rotations/reflections), therefore only two sets of positions are needed.
         ////    There are seven shears needed per BGO Crystal
@@ -828,7 +828,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         G4double    sign_BGOCrystal_razor[8][3];
         G4double    crm_BGOCrystal_razor[2][7];
         G4int       signrm_BGOCrystal_quad[4][3];
-
+        
         ////    The components of positions for the razor
         ////    cP_BGOCrystal1_razor
         cP_BGOCrystal_razor[0][0][0] = 0., cP_BGOCrystal_razor[0][0][1] = 0., cP_BGOCrystal_razor[0][0][2] = (250.-42.);
@@ -838,7 +838,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         cP_BGOCrystal_razor[0][4][0] = (-0.20 + 250.), cP_BGOCrystal_razor[0][4][1] = 74.3269833, cP_BGOCrystal_razor[0][4][2] = -151.6673049;
         cP_BGOCrystal_razor[0][5][0] = -287.9700263, cP_BGOCrystal_razor[0][5][1] = 61.7954410, cP_BGOCrystal_razor[0][5][2] = -209.6135091;
         cP_BGOCrystal_razor[0][6][0] = 0., cP_BGOCrystal_razor[0][6][1] = 83.3486382, cP_BGOCrystal_razor[0][6][2] = -310.4623689;
-
+        
         ////    cP_BGOCrystal2_razor
         cP_BGOCrystal_razor[1][0][0] = 0., cP_BGOCrystal_razor[1][0][1] = 0., cP_BGOCrystal_razor[1][0][2] = (250.-42.);
         cP_BGOCrystal_razor[1][1][0] = -0.2000000, cP_BGOCrystal_razor[1][1][1] = -189.5684723, cP_BGOCrystal_razor[1][1][2] = -213.7959824;
@@ -847,7 +847,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         cP_BGOCrystal_razor[1][4][0] = 208.0290511, cP_BGOCrystal_razor[1][4][1] = 69.0956904, cP_BGOCrystal_razor[1][4][2] = -269.0694506;
         cP_BGOCrystal_razor[1][5][0] = -252.0980447, cP_BGOCrystal_razor[1][5][1] = -101.2517474, cP_BGOCrystal_razor[1][5][2] = -172.2364983;
         cP_BGOCrystal_razor[1][6][0] = 0., cP_BGOCrystal_razor[1][6][1] = 83.3486382, cP_BGOCrystal_razor[1][6][2] = -310.4623689;
-
+        
         ////    Reflections (for a total of 8 versions of the aforementioned two "unique" BGO Crystals
         sign_BGOCrystal_razor[0][0] = 1, sign_BGOCrystal_razor[0][1] = 1, sign_BGOCrystal_razor[0][2] = 1;
         sign_BGOCrystal_razor[1][0] = -1, sign_BGOCrystal_razor[1][1] = -1, sign_BGOCrystal_razor[1][2] = 1;
@@ -857,7 +857,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         sign_BGOCrystal_razor[5][0] = 1, sign_BGOCrystal_razor[5][1] = 1, sign_BGOCrystal_razor[5][2] = 1;
         sign_BGOCrystal_razor[6][0] = 1, sign_BGOCrystal_razor[6][1] = -1, sign_BGOCrystal_razor[6][2] = 1;
         sign_BGOCrystal_razor[7][0] = -1, sign_BGOCrystal_razor[7][1] = 1, sign_BGOCrystal_razor[7][2] = 1;
-
+        
         
         ////    A sign per rotation (about 3 axes), per quadrant
         ////    0->X, 1->Y, 2->Z
@@ -865,7 +865,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         signrm_BGOCrystal_quad[1][0] = -1, signrm_BGOCrystal_quad[1][1] = 1, signrm_BGOCrystal_quad[1][2] = 1;
         signrm_BGOCrystal_quad[2][0] = -1, signrm_BGOCrystal_quad[2][1] = -1, signrm_BGOCrystal_quad[2][2] = 1;
         signrm_BGOCrystal_quad[3][0] = 1, signrm_BGOCrystal_quad[3][1] = -1, signrm_BGOCrystal_quad[3][2] = 1;
-
+        
         ////    The two "unique" sets of rotations;
         crm_BGOCrystal_razor[0][0] = 0.;
         crm_BGOCrystal_razor[0][1] = -7.;
@@ -874,7 +874,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         crm_BGOCrystal_razor[0][4] = 0.;
         crm_BGOCrystal_razor[0][5] = -7.;
         crm_BGOCrystal_razor[0][6] = -3.;
-
+        
         crm_BGOCrystal_razor[1][0] = 0.;
         crm_BGOCrystal_razor[1][1] = -7.;
         crm_BGOCrystal_razor[1][2] = -7.;
@@ -887,7 +887,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         //  ph suffix-> place holder
         G4double    cP_BGOCrystal_ph[3];
         G4double    signP_BGOCrystal_ph[3];
-
+        
         G4int       index1, index2;
         G4double    swap[2];
         
@@ -910,7 +910,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                 else
                     index1 = 0;
             }
-
+            
             ////    Positions of the shearing
             for(G4int j=0; j<7; j++)
             {
@@ -923,7 +923,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                 {
                     swap[0] = cP_BGOCrystal_ph[0];
                     swap[1] = cP_BGOCrystal_ph[1];
-
+                    
                     cP_BGOCrystal_ph[0] = swap[1];
                     cP_BGOCrystal_ph[1] = swap[0];
                 }
@@ -931,11 +931,11 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                 signP_BGOCrystal_ph[0] = sign_BGOCrystal_razor[i/2][0];
                 signP_BGOCrystal_ph[1] = sign_BGOCrystal_razor[i/2][1];
                 signP_BGOCrystal_ph[2] = sign_BGOCrystal_razor[i/2][2];
-
+                
                 position_BGOCrystal_razor[i][j] = G4ThreeVector(signP_BGOCrystal_ph[0]*cP_BGOCrystal_ph[0]*mm,
                                                                 signP_BGOCrystal_ph[1]*cP_BGOCrystal_ph[1]*mm,
                                                                 signP_BGOCrystal_ph[2]*cP_BGOCrystal_ph[2]*mm);
-
+                
             }
             
             ////    Rotations of the shearing
@@ -949,7 +949,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
             
             if((i/4)==0 || (i/4)==2) index2 = index2;
             if((i/4)==1 || (i/4)==3) index2 = 3 - index2;
- 
+            
             if(index2==0)
             {
                 rm_BGOCrystal_razor[i][0]->rotateZ(signrm_BGOCrystal_quad[(i/4)][2]*crm_BGOCrystal_razor[0][0]*deg);
@@ -993,11 +993,11 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
             
             
         }
-
+        
         
         char nameChar[512];
         G4String nameG4String;
-
+        
         for(G4int i=0; i<16; i++)
         {
             for(G4int j=0; j<6; j++)
@@ -1023,7 +1023,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
             nameG4String = string(nameChar);
             
             Solid_BGOCrystal_shear[i][6] = new G4SubtractionSolid(nameChar, Solid_BGOCrystal_shear[i][5], Solid_BGOCrystal_PMTrazor, rm_BGOCrystal_razor[i][6], position_BGOCrystal_razor[i][6]);
-
+            
         }
         
         for(G4int i=0; i<16; i++)
@@ -1046,7 +1046,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         
         cP_Shield_PMT[0][0] = -22., cP_Shield_PMT[0][1] = 83.3486382, cP_Shield_PMT[0][2] = -310.4623689;
         cP_Shield_PMT[1][0] = -58.5, cP_Shield_PMT[1][1] = 83.3486382, cP_Shield_PMT[1][2] = -310.4623689;
-
+        
         
         ////    A unique rotation of the PMT's within each quadrant (X+, X-, Y+, Y-)
         G4RotationMatrix* rm_Shield_PMT[4];
@@ -1063,12 +1063,12 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         
         G4Tubs* Solid_Shield_PMTtemplate = new G4Tubs("Shield_PMT", 0.*mm, 14.3*mm, 57.*mm, 0.*deg, 360.*deg);
         G4Box* Solid_Shield_PMTRaw = new G4Box("Shield_PMTtemplate", (1000./2)*mm, (1000./2)*mm, (1000./2)*mm);
-
+        
         
         //  placeholders
         G4double    cP_Shield_PMT_ph[3];
         G4double    signP_Shield_PMT_ph[3];
-
+        
         for(G4int i=0; i<16; i++)
         {
             ////    Determining which copy number (0->7) of pair of "two unique" PMT positions we are working with
@@ -1121,11 +1121,11 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
             if(i>=2 && i<=5)  index2 = 1;
             if(i>=6 && i<=9)  index2 = 2;
             if(i>=10 && i<=13)  index2 = 3;
-
+            
             Solid_CLOVER_Shield_PMT[i] = new G4IntersectionSolid(nameG4String, Solid_Shield_PMTRaw, Solid_Shield_PMTtemplate, rm_Shield_PMT[index2], position_Shield_PMT[i]);
             
             Logic_CLOVER_Shield_PMT[i] = new G4LogicalVolume(Solid_CLOVER_Shield_PMT[i], G4_AIR_Material,"LogicCLOVERShieldPMT",0,0,0);
-
+            
         }
     }
     
@@ -1219,7 +1219,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                 
             }
             
-
+            
             new G4PVPlacement(CLOVER_Shield_transform[i],
                               Logic_CLOVER_Shield_Heavimet,
                               "CLOVER_Shield_Heavimet",       // its name
@@ -1227,15 +1227,15 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                               false,           // no boolean operations
                               i,               // copy number
                               fCheckOverlaps); // checking overlaps
-        
+            
         }
     }
     
-
+    
     //////////////////////////////////////
     //      PlasticScint DEFINITION     //
     //////////////////////////////////////
-
+    
     G4LogicalVolume* Logic_PlasticScint[numberOf_PlasticScint];
     G4Box* Solid_PlasticScint = new G4Box("Scintillator", (600/2)*mm, (100/2)*mm, (100/2)*mm);
     
@@ -1243,7 +1243,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
     {
         Logic_PlasticScint[i] = new G4LogicalVolume(Solid_PlasticScint, BC408_Material,"Scintillator",0,0,0);
     }
-
+    
     
     //////////////////////////////////////////
     //      PlasticScint INITIALISATION     //
@@ -1256,17 +1256,17 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
             PlasticScint_transform[i] = G4Transform3D(PlasticScint_rotm[i],PlasticScint_CentrePosition[i]);
             
             PhysiPlasticScint = new G4PVPlacement(PlasticScint_transform[i],
-                                            Logic_PlasticScint[i],    // its logical volume
-                                            "PlasticScint",           // its name
-                                            LogicWorld,         // its mother  volume
-                                            false,              // no boolean operations
-                                            i,                  // copy number
-                                            fCheckOverlaps);    // checking overlaps
+                                                  Logic_PlasticScint[i],    // its logical volume
+                                                  "PlasticScint",           // its name
+                                                  LogicWorld,         // its mother  volume
+                                                  false,              // no boolean operations
+                                                  i,                  // copy number
+                                                  fCheckOverlaps);    // checking overlaps
             
         }
     }
     
-
+    
     
     
     ////////////////////////////////////////
@@ -1316,7 +1316,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
     LEPS_HPGeCrystal_rotm[1].rotateZ(90.*deg);
     LEPS_HPGeCrystal_rotm[2].rotateZ(180.*deg);
     LEPS_HPGeCrystal_rotm[3].rotateZ(270.*deg);
-
+    
     for(G4int i=0; i<4; i++)
     {
         LEPS_HPGeCrystal_transform[i] = G4Transform3D(LEPS_HPGeCrystal_rotm[i], G4ThreeVector(0,0,(29.0-0.5)*mm));
@@ -1462,12 +1462,12 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
                                                  0,               // copy number
                                                  fCheckOverlaps); // checking overlaps
     }
-
     
     
     
     
-
+    
+    
     
     //////////////////////////////////////////////////
     //      AFRODITE SPECTROMETER INITIIALIZATION       //
@@ -1541,12 +1541,12 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         }
         
         PhysiAFRODITE_Quadrupole = new G4PVPlacement(AFRODITE_Quadrupole_transform,
-                                                 Logic_AFRODITE_Quadrupole,       // its logical volume
-                                                 "AFRODITE_Quadrupole",       // its name
-                                                 LogicWorld,         // its mother  volume
-                                                 false,           // no boolean operations
-                                                 0,               // copy number
-                                                 fCheckOverlaps); // checking overlaps
+                                                     Logic_AFRODITE_Quadrupole,       // its logical volume
+                                                     "AFRODITE_Quadrupole",       // its name
+                                                     LogicWorld,         // its mother  volume
+                                                     false,           // no boolean operations
+                                                     0,               // copy number
+                                                     fCheckOverlaps); // checking overlaps
         
     }
     
@@ -1555,13 +1555,13 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
     //////////////////////////////////////////////////////
     
     /*
-    // magnetic field ----------------------------------------------------------
-    MagneticField_AFRODITE_D1 = new G4UniformMagField(G4ThreeVector(0., AFRODITE_Dipole1_BZ, 0.));
-    fieldManagerMagneticField_AFRODITE_D1 = new G4FieldManager();
-    fieldManagerMagneticField_AFRODITE_D1->SetDetectorField(MagneticField_AFRODITE_D1);
-    fieldManagerMagneticField_AFRODITE_D1->CreateChordFinder(MagneticField_AFRODITE_D1);
-    G4bool forceToAllDaughters = true;
-    */
+     // magnetic field ----------------------------------------------------------
+     MagneticField_AFRODITE_D1 = new G4UniformMagField(G4ThreeVector(0., AFRODITE_Dipole1_BZ, 0.));
+     fieldManagerMagneticField_AFRODITE_D1 = new G4FieldManager();
+     fieldManagerMagneticField_AFRODITE_D1->SetDetectorField(MagneticField_AFRODITE_D1);
+     fieldManagerMagneticField_AFRODITE_D1->CreateChordFinder(MagneticField_AFRODITE_D1);
+     G4bool forceToAllDaughters = true;
+     */
     
     if(AFRODITE_Dipole1)
     {
@@ -1575,7 +1575,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         fieldManagerMagneticField_AFRODITE_D1 -> SetDetectorField(MagneticField_AFRODITE_D1);
         
         fChordFinder_AFRODITE_D1 = new G4ChordFinder( MagneticField_AFRODITE_D1, minStepMagneticField, stepperMagneticField_AFRODITE_D1);
-
+        
         
         /////////////////////////////////////////////
         
@@ -1584,7 +1584,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         //G4Box* Solid_AFRODITE_Dipole1 = new G4Box("Solid_AFRODITE_Dipole1", (50./2)*cm, (50./2)*cm, (30./2)*cm);
         //G4Tubs* Solid_AFRODITE_Dipole1 = new G4Tubs("Solid_AFRODITE_Dipole1", 50.*cm, 100.0*cm, 30.*cm, 0.*deg, 40.*deg);
         G4Tubs* Solid_AFRODITE_Dipole1 = new G4Tubs("Solid_AFRODITE_Dipole1", 30.*cm, 150.0*cm, 30.*cm, 0.*deg, 40.*deg);
-
+        
         G4LogicalVolume* Logic_AFRODITE_Dipole1 = new G4LogicalVolume(Solid_AFRODITE_Dipole1, G4_Galactic_Material,"Logic_AFRODITE_Dipole1",0,0,0);
         Logic_AFRODITE_Dipole1 -> SetFieldManager(fieldManagerMagneticField_AFRODITE_D1, true) ;
         
@@ -1593,18 +1593,18 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
         //G4AutoDelete::Register(fieldManagerMagneticField_AFRODITE_D1);
         
         PhysiAFRODITE_Dipole1 = new G4PVPlacement(AFRODITE_Dipole1_transform,
-                                              Logic_AFRODITE_Dipole1,       // its logical volume
-                                              "AFRODITE_Dipole1",       // its name
-                                              LogicWorld,         // its mother  volume
-                                              false,           // no boolean operations
-                                              0,               // copy number
-                                              fCheckOverlaps); // checking overlaps
+                                                  Logic_AFRODITE_Dipole1,       // its logical volume
+                                                  "AFRODITE_Dipole1",       // its name
+                                                  LogicWorld,         // its mother  volume
+                                                  false,           // no boolean operations
+                                                  0,               // copy number
+                                                  fCheckOverlaps); // checking overlaps
         
     }
     
     
     
-
+    
     
     
     
@@ -1666,18 +1666,30 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void DetectorConstruction::ConstructSDandField()
+{
+    // Create global magnetic field messenger.
+    // Uniform magnetic field is then created automatically if
+    // the field value is not zero.
+    G4ThreeVector fieldValue = G4ThreeVector();
+    fMagFieldMessenger = new G4GlobalMagFieldMessenger(fieldValue);
+    fMagFieldMessenger->SetVerboseLevel(1);
+    
+    // Register the field messenger for deleting
+    G4AutoDelete::Register(fMagFieldMessenger);
+}
 
 void DetectorConstruction::ConstructField()
-{ 
+{
     // Create global magnetic field messenger.
     // Uniform magnetic field is then created automatically if
     // the field value is not zero.
     G4ThreeVector fieldValue = G4ThreeVector();
     //G4ThreeVector fieldValue = G4ThreeVector(0., 5*tesla, 0.);
-
+    
     fMagFieldMessenger = new G4GlobalMagFieldMessenger(fieldValue);
     fMagFieldMessenger->SetVerboseLevel(1);
-  
+    
     // Register the field messenger for deleting
     G4AutoDelete::Register(fMagFieldMessenger);
 }

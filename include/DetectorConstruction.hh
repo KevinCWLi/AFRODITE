@@ -97,30 +97,37 @@ const G4int     numberOf_LEPS = 6;
 
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
-  public:
+public:
     DetectorConstruction();
     virtual ~DetectorConstruction();
-
-  public:
+    
+public:
     virtual G4VPhysicalVolume* Construct();
     virtual void ConstructField();
+    
+    virtual void ConstructSDandField();
 
     // get methods
     //
     //const G4VPhysicalVolume* GetAbsorberPV() const;
     //const G4VPhysicalVolume* GetGapPV() const;
-     
-  private:
+    
+private:
     // methods
     //
     void DefineMaterials();
     G4VPhysicalVolume* DefineVolumes();
-  
+    
     // data members
     //
     static G4ThreadLocal G4GlobalMagFieldMessenger*  fMagFieldMessenger;
-                                      // magnetic field messenger
-     
+    // magnetic field messenger
+    
+    // get methods
+    //
+    const G4VPhysicalVolume* GetAbsorberPV() const;
+    const G4VPhysicalVolume* GetGapPV() const;
+    
     G4VPhysicalVolume*   fAbsorberPV; // the absorber physical volume
     G4VPhysicalVolume*   fGapPV;      // the gap physical volume
     
@@ -163,7 +170,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     
     //  Shield PMT Tubes
     G4VPhysicalVolume*  PhysiCLOVER_Shield_PMT;
-
+    
     
     ///////////////////////////////
     //      PlasticScint DETECTORS
@@ -298,6 +305,15 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     
 };
 
+// inline functions
+
+inline const G4VPhysicalVolume* DetectorConstruction::GetAbsorberPV() const {
+    return fAbsorberPV;
+}
+
+inline const G4VPhysicalVolume* DetectorConstruction::GetGapPV() const  {
+    return fGapPV;
+}
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
