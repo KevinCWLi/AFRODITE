@@ -290,6 +290,8 @@ void EventAction::EndOfEventAction(const G4Event* event)
     //                CLOVER DETECTOR ARRAY
     //
     ////////////////////////////////////////////////////////
+    GainCLOVER = 1.0;
+    OffsetCLOVER = 0.0;
     
     for(G4int i=0; i<9; i++)
     {
@@ -342,12 +344,14 @@ void EventAction::EndOfEventAction(const G4Event* event)
             
             if(Activate_CLOVER_ADDBACK && CLOVER_EDep[i][k] >= CLOVER_HPGeCrystal_ThresholdEnergy)
             {
-                //analysisManager->FillNtupleDColumn(0, i, GainCLOVER*CLOVER_EDep[i][k] + OffsetCLOVER);
+                analysisManager->FillNtupleDColumn(0, i, GainCLOVER*CLOVER_EDep[i][k] + OffsetCLOVER);
             }
         }
+        
+        analysisManager->AddNtupleRow(0);
     }
     
-    
+
     ////////////////////////////////////////////////////
     //
     //              LEPS DETECTOR ARRAY

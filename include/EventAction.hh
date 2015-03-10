@@ -73,7 +73,7 @@ const G4double      PlasticScint_TotalSampledTime = PlasticScint_SamplingTime * 
 
 
 ///////////////     CLOVER Detectors - PIXIE16 Sampling     ///////////////////
-const G4bool        Activate_CLOVER_ADDBACK = false;
+const G4bool        Activate_CLOVER_ADDBACK = true;
 const G4bool        Activate_CLOVER_ComptonSupression = false;
 
 const G4double      CLOVER_SamplingTime = 10; // ns
@@ -188,16 +188,16 @@ public:
     //G4double    GainPlasticScint = 1.0;
     //G4double    OffsetPlasticScint = 0.0;
     
-    G4double    PlasticScint_EDep[3][PlasticScint_TotalTimeSamples];
-    G4double    PlasticScint_TOF[3][PlasticScint_TotalTimeSamples];
-    G4bool      PlasticScint_Trig[3];
+    G4double    PlasticScint_EDep[12][PlasticScint_TotalTimeSamples];
+    G4double    PlasticScint_TOF[12][PlasticScint_TotalTimeSamples];
+    G4bool      PlasticScint_Trig[12];
     G4int       PlasticScint_numberDetTrig;
     
     //      Energy Weighted Positioning
-    G4double       PlasticScint_EWpositionX[3][PlasticScint_TotalTimeSamples];
-    G4double       PlasticScint_EWpositionY[3][PlasticScint_TotalTimeSamples];
-    G4double       PlasticScint_positionX[3][PlasticScint_TotalTimeSamples];
-    G4double       PlasticScint_positionY[3][PlasticScint_TotalTimeSamples];
+    G4double       PlasticScint_EWpositionX[12][PlasticScint_TotalTimeSamples];
+    G4double       PlasticScint_EWpositionY[12][PlasticScint_TotalTimeSamples];
+    G4double       PlasticScint_positionX[12][PlasticScint_TotalTimeSamples];
+    G4double       PlasticScint_positionY[12][PlasticScint_TotalTimeSamples];
     
     void AddEnergy_PlasticScint(G4int i, G4int j, G4double a)	{PlasticScint_EDep[i][j] += a; };
     void TagTOF_PlasticScint(G4int i, G4int j, G4double a)	{PlasticScint_TOF[i][j] = a; };
